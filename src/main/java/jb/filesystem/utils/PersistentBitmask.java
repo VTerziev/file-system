@@ -43,6 +43,10 @@ public class PersistentBitmask {
         }
     }
 
+    public boolean isAvailable(int blockNumber) {
+        return !freeBlocks.get(blockNumber);
+    }
+
     public int getAvailableBlocks() {
         return freeBlocks.cardinality();
     }

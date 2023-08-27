@@ -4,7 +4,7 @@ import jb.filesystem.metadata.*;
 import jb.filesystem.storage.MetadataStorage;
 import jb.filesystem.utils.PersistentBitmask;
 
-public class StoredMetadataManager implements MetadataBlocksManager {
+public class StoredMetadataManager implements MetadataBlocksManager { // TODO: make singleton?
     private final PersistentBitmask bitmask;
     private final MetadataStorage metadataStorage;
 
@@ -15,6 +15,9 @@ public class StoredMetadataManager implements MetadataBlocksManager {
 
     @Override
     public MetadataBlock getBlock(int blockId) {
+        if (!bitmask.isAvailable(blockId)) {
+            throw new IllegalArgumentException("Block " + blockId + " is not allocated");
+        }
         MetadataBlock[] buffer = new MetadataBlock[1];
         metadataStorage.read(blockId, 1, buffer);
         return buffer[0];
@@ -55,6 +58,9 @@ public class StoredMetadataManager implements MetadataBlocksManager {
     @Override
     public void deallocateBlock(int blockId) {
         System.out.println("Deallocating meta block: " + blockId);
+        if (!bitmask.isAvailable(blockId)) {
+            throw new IllegalArgumentException("Block " + blockId + " is not allocated");
+        }
         bitmask.deallocateBlock(blockId);
     }
 }
