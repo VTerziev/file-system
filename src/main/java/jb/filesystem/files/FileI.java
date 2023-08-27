@@ -7,7 +7,7 @@ public interface FileI {
 
     // How many bytes were written
     int write(int offset, int len, byte[] buffer);
-
+    String getName();
     int getFileId();
     boolean isRegularFile();
     boolean isDirectory();

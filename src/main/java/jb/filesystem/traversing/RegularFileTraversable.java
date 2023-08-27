@@ -70,11 +70,10 @@ public class RegularFileTraversable implements Traversable {
     @Override
     public List<Traversable> getNonLeaves() {
         List<Traversable> result = new ArrayList<>();
-        TraversablesFactory factory = new TraversablesFactory(metadataManager);
 
         for (int blockId : fileMetadata.getIndirectDataBlocks()) {
-            MetadataBlock block = metadataManager.getBlock(blockId);
-            Traversable traversable = factory.buildTraversable(block, blockId);
+            MetadataBlocksPointers block = metadataManager.getMetadataBlocksPointersMetadata(blockId);
+            Traversable traversable = new MetadataBlockPointersTraversable(block, blockId, metadataManager);
             result.add(traversable);
         }
         return result;

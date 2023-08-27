@@ -6,7 +6,6 @@ import jb.filesystem.blockmanager.StoredDataBlocksManager;
 import jb.filesystem.blockmanager.StoredMetadataManager;
 import jb.filesystem.accessors.FileAccessor;
 import jb.filesystem.storage.BitStorage;
-import jb.filesystem.traversing.TraversablesFactory;
 import jb.filesystem.traversing.Traversor;
 import jb.filesystem.utils.PersistentBitmask;
 import jb.filesystem.metadata.FileMetadata;
@@ -32,9 +31,8 @@ public class FileAccessorTest {
         DataBlocksStorage dataStorage = new DataBlocksStorage(new InMemoryStorage(300));
         DataBlocksManager dataBlocksManager = new StoredDataBlocksManager(dataBitmask, dataStorage);
 
-        TraversablesFactory factory = new TraversablesFactory(metadataManager);
         Traversor traversor = new Traversor();
-        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, factory, traversor);
+        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, traversor);
 
         int fileId = metadataManager.allocateBlock();
         FileMetadata metadata = new FileMetadata("file1");
@@ -95,9 +93,8 @@ public class FileAccessorTest {
         DataBlocksStorage dataStorage = new DataBlocksStorage(new InMemoryStorage(300));
         DataBlocksManager dataBlocksManager = new StoredDataBlocksManager(dataBitmask, dataStorage);
 
-        TraversablesFactory factory = new TraversablesFactory(metadataManager);
         Traversor traversor = new Traversor();
-        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, factory, traversor);
+        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, traversor);
 
         int fileId = metadataManager.allocateBlock();
         FileMetadata metadata = new FileMetadata("file1");
@@ -161,9 +158,8 @@ public class FileAccessorTest {
         DataBlocksStorage dataStorage = new DataBlocksStorage(new InMemoryStorage(300));
         DataBlocksManager dataBlocksManager = new StoredDataBlocksManager(dataBitmask, dataStorage);
 
-        TraversablesFactory factory = new TraversablesFactory(metadataManager);
         Traversor traversor = new Traversor();
-        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, factory, traversor);
+        FileAccessor fileAccessor = new FileAccessor(metadataManager, dataBlocksManager, traversor);
 
         int fileId = metadataManager.allocateBlock();
         FileMetadata metadata = new FileMetadata("file1");

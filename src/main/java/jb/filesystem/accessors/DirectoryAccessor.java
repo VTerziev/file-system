@@ -18,14 +18,15 @@ public class DirectoryAccessor { // TODO: make concurrent
     }
 
     public void addFile(int directoryId, int fileId) {
-        DirectoryMetadata metadata = (DirectoryMetadata) metadataManager.getBlock(directoryId);
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         metadata.addChild(fileId);
         metadataManager.saveBlock(directoryId, metadata);
     }
 
     public Optional<Integer> getFileId(int directoryId, String fileName) {
-        DirectoryMetadata metadata = (DirectoryMetadata) metadataManager.getBlock(directoryId);
-        return metadata.getChildren().stream()
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
+        return metadata.getChildren()
+                .stream()
                 .filter(x -> metadataManager.getBlock(x).getName().equals(fileName))
                 .findAny();
     }
@@ -44,7 +45,7 @@ public class DirectoryAccessor { // TODO: make concurrent
     }
 
     private boolean deleteFileById(int directoryId, int fileId) {
-        DirectoryMetadata metadata = (DirectoryMetadata) metadataManager.getBlock(directoryId);
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         metadata.deleteChild(fileId);
         metadataManager.saveBlock(directoryId, metadata);
 
@@ -53,12 +54,13 @@ public class DirectoryAccessor { // TODO: make concurrent
             return deleteFilesInDir(fileId);
         } else if (fileMetadata.getType() == FileType.REGULAR){
             fileAccessor.deleteFile(fileId);
+            return true;
         }
-        return true;
+        throw new IllegalStateException("File type not found");
     }
 
     public List<Integer> getAllFilesIn(int directoryId) {
-        DirectoryMetadata metadata = (DirectoryMetadata) metadataManager.getBlock(directoryId);
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         return metadata.getChildren();
     }
 
@@ -70,8 +72,13 @@ public class DirectoryAccessor { // TODO: make concurrent
     }
 
     public void renameDirectory(int directoryId, String newName) {
-        DirectoryMetadata metadata = (DirectoryMetadata) metadataManager.getBlock(directoryId);
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         metadata.setName(newName);
         metadataManager.saveBlock(directoryId, metadata);
+    }
+
+    public String getName(int directoryId) {
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
+        return metadata.getName();
     }
 }

@@ -13,12 +13,17 @@ public class DirectoryFile implements FileI { // TODO
 
     @Override
     public int read(int offset, int len, byte[] buffer) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int write(int offset, int len, byte[] buffer) {
-        return 0;
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getName() {
+        return directoryAccessor.getName(fileId);
     }
 
     @Override

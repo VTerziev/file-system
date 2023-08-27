@@ -8,7 +8,6 @@ import jb.filesystem.blockmanager.MetadataBlocksManager;
 import jb.filesystem.accessors.DirectoryAccessor;
 import jb.filesystem.accessors.FileAccessor;
 import jb.filesystem.storage.ByteStorage;
-import jb.filesystem.traversing.TraversablesFactory;
 import jb.filesystem.traversing.Traversor;
 
 public class FileSystemInitializer {
@@ -20,9 +19,8 @@ public class FileSystemInitializer {
         DataBlockManagersProvider provider = new DataBlockManagersProvider(storage);
         DataBlocksManager dataBlockManager = provider.getDataBlockManager();
         MetadataBlocksManager metadataBlockManager = provider.getMetadataBlockManager();
-        TraversablesFactory factory = new TraversablesFactory(metadataBlockManager);
         Traversor traversor = new Traversor();
-        this.fileAccessor = new FileAccessor(metadataBlockManager, dataBlockManager, factory, traversor);
+        this.fileAccessor = new FileAccessor(metadataBlockManager, dataBlockManager, traversor);
         this.directoryAccessor = new DirectoryAccessor(metadataBlockManager, fileAccessor);
         this.fileFactory = new FileFactory(metadataBlockManager, directoryAccessor, fileAccessor);
     }

@@ -58,21 +58,33 @@ public class MetadataBlockPointersTraversable implements Traversable {
     }
 
     @Override
-    public List<Traversable> getNonLeaves() { // TODO: don't create new factories here; same for different traversable impl
+    public List<Traversable> getNonLeaves() {
         return pointers.getMetadataBlocks().stream()
-                .map(blockId -> {
-                    MetadataBlock block = metadataManager.getBlock(blockId);
-                    return new TraversablesFactory(metadataManager).buildTraversable(block, blockId);
-                })
+                .map(this::getNonLeaf)
                 .collect(Collectors.toList());
+    }
+
+    private boolean shouldUseDataBlockPointers() {
+        return pointers.getMaxDepth() == 1;
+    }
+
+    private Traversable getNonLeaf(int blockId) {
+        if (shouldUseDataBlockPointers()) {
+            DataBlocksPointers block = metadataManager.getDataBlocksPointersMetadata(blockId);
+            return new DataBlockPointersTraversable(block, blockId, metadataManager);
+        } else {
+            MetadataBlocksPointers block = metadataManager.getMetadataBlocksPointersMetadata(blockId);
+            return new MetadataBlockPointersTraversable(block, blockId, metadataManager);
+        }
     }
 
     @Override
     public void createNewNonLeaf() {
         int blockId = metadataManager.allocateBlock();
         int maxDepth = pointers.getMaxDepth();
-        MetadataBlock dataBlocksPointers = maxDepth == 1 ?
-                new DataBlocksPointers() : new MetadataBlocksPointers(maxDepth-1);
+        MetadataBlock dataBlocksPointers = shouldUseDataBlockPointers()
+                ? new DataBlocksPointers()
+                : new MetadataBlocksPointers(maxDepth-1);
         metadataManager.saveBlock(blockId, dataBlocksPointers);
         pointers.addDataBlock(blockId);
         metadataManager.saveBlock(id, pointers);

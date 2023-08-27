@@ -1,6 +1,6 @@
 package jb.filesystem.blockmanager;
 
-import jb.filesystem.metadata.MetadataBlock;
+import jb.filesystem.metadata.*;
 import jb.filesystem.storage.MetadataStorage;
 import jb.filesystem.utils.PersistentBitmask;
 
@@ -18,6 +18,26 @@ public class StoredMetadataManager implements MetadataBlocksManager {
         MetadataBlock[] buffer = new MetadataBlock[1];
         metadataStorage.read(blockId, 1, buffer);
         return buffer[0];
+    }
+
+    @Override
+    public DirectoryMetadata getDirectoryMetadata(int blockId) {
+        return (DirectoryMetadata) getBlock(blockId);
+    }
+
+    @Override
+    public FileMetadata getFileMetadata(int blockId) {
+        return (FileMetadata) getBlock(blockId);
+    }
+
+    @Override
+    public DataBlocksPointers getDataBlocksPointersMetadata(int blockId) {
+        return (DataBlocksPointers) getBlock(blockId);
+    }
+
+    @Override
+    public MetadataBlocksPointers getMetadataBlocksPointersMetadata(int blockId) {
+        return (MetadataBlocksPointers) getBlock(blockId);
     }
 
     @Override

@@ -4,8 +4,8 @@ import jb.filesystem.blockmanager.DataBlocksManager;
 import jb.filesystem.blockmanager.MetadataBlocksManager;
 import jb.filesystem.data.DataBlock;
 import jb.filesystem.metadata.FileMetadata;
+import jb.filesystem.traversing.RegularFileTraversable;
 import jb.filesystem.traversing.Traversable;
-import jb.filesystem.traversing.TraversablesFactory;
 import jb.filesystem.traversing.Traversor;
 import jb.filesystem.utils.SplitByBlocks;
 
@@ -13,14 +13,13 @@ public class FileAccessor { // TODO: make concurrent
 
     private final MetadataBlocksManager metadataManager;
     private final DataBlocksManager dataBlocksManager;
-    private final TraversablesFactory factory;
     private final Traversor traversor;
 
-    public FileAccessor(MetadataBlocksManager metadataManager, DataBlocksManager dataBlocksManager,
-                        TraversablesFactory factory, Traversor traversor) {
+    public FileAccessor(MetadataBlocksManager metadataManager,
+                        DataBlocksManager dataBlocksManager,
+                        Traversor traversor) {
         this.metadataManager = metadataManager;
         this.dataBlocksManager = dataBlocksManager;
-        this.factory = factory;
         this.traversor = traversor;
     }
 
@@ -81,14 +80,14 @@ public class FileAccessor { // TODO: make concurrent
     }
 
     public void renameFile(int fileId, String newName) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
         metadata.setName(newName);
         metadataManager.saveBlock(fileId, metadata);
     }
 
     private int getBlockId(int fileId, int blockOffset) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
-        Traversable traversable = factory.buildTraversable(metadata, fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
         return traversor.getLeaf(traversable, blockOffset);
     }
 
@@ -100,25 +99,25 @@ public class FileAccessor { // TODO: make concurrent
     }
 
     public int getFileSize(int fileId) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
         return metadata.getFileSize();
     }
 
     private void maybeIncreaseFileSize(int fileId, int newFileSize) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
         metadata.maybeIncreaseFileSize(newFileSize);
         metadataManager.saveBlock(fileId, metadata);
     }
 
     private int getAllocatedBlocksCount(int fileId) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
-        Traversable traversable = factory.buildTraversable(metadata, fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
         return traversor.getTotalLeavesCount(traversable);
     }
 
     private void deleteLastBlock(int fileId) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
-        Traversable traversable = factory.buildTraversable(metadata, fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
         int lastDataBlockId = traversor.getLeaf(traversable, getAllocatedBlocksCount(fileId)-1);
         traversor.deleteLastLeaf(traversable);
         dataBlocksManager.deallocateBlock(lastDataBlockId);
@@ -129,10 +128,15 @@ public class FileAccessor { // TODO: make concurrent
     }
 
     private void addADataBlockToAFile(int fileId) {
-        FileMetadata metadata = (FileMetadata) metadataManager.getBlock(fileId);
-        Traversable traversable = factory.buildTraversable(metadata, fileId);
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
         int blockId = dataBlocksManager.allocateBlock();
         traversor.appendLeaf(traversable, blockId);
         metadataManager.saveBlock(fileId, metadata);
+    }
+
+    public String getName(int fileId) {
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        return metadata.getName();
     }
 }

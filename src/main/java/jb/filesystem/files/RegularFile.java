@@ -23,6 +23,11 @@ public class RegularFile implements FileI {
     }
 
     @Override
+    public String getName() {
+        return fileAccessor.getName(fileId);
+    }
+
+    @Override
     public int getFileId() {
         return fileId;
     }
