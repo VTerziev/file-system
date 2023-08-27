@@ -78,9 +78,7 @@ public class FileAccessor { // TODO: make concurrent
     }
 
     public void deleteFile(int fileId) {
-        while (getAllocatedBlocksCount(fileId) > 0) {
-            deleteLastBlock(fileId);
-        }
+        shrinkFile(fileId, 0);
         metadataManager.deallocateBlock(fileId);
     }
 
@@ -103,7 +101,7 @@ public class FileAccessor { // TODO: make concurrent
         }
     }
 
-    private void shrinkFile(int fileId, int targetBytes) { // TODO: expose this method
+    private void shrinkFile(int fileId, int targetBytes) {
         while (getAllocatedFileSize(fileId) >= targetBytes + DataBlock.BLOCK_SIZE_BYTES) {
             deleteLastBlock(fileId);
         }

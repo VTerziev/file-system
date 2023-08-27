@@ -23,7 +23,7 @@ public class Main {
         System.out.println(fs.get("/","file2"));
 
         int cc = 0;
-        for (int i = 0 ; i < 200 ; i ++ ) {
+        for (int i = 0 ; i < 10 ; i ++ ) {
             file2.write(cc, 20, new byte[]{(byte)i, (byte) (i/256), 'c', 'd', 'e',
                     'a', 'b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e',
                     'a', 'b', 'c', 'd', 'e' });
