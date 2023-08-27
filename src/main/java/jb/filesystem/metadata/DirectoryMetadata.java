@@ -65,6 +65,6 @@ public class DirectoryMetadata implements MetadataBlock {
     }
 
     public void deleteChild(int fileId) {
-        childrenMetadataBlocks.remove((Integer) fileId); // TODO: test this
+        childrenMetadataBlocks.remove((Integer) fileId);
     }
 }

@@ -6,6 +6,8 @@ import jb.filesystem.init.FileSystemInitializer;
 import jb.filesystem.storage.InMemoryStorage;
 import jb.filesystem.storage.ByteStorage;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -20,17 +22,17 @@ public class Main {
         FileI file2 = fs.createFile("/","file2");
         System.out.println(fs.get("/","file2"));
 
-//        int cc = 0;
-//        for (int i = 0 ; i < 2 ; i ++ ) {
-//            file2.write(cc, 20, new byte[]{(byte)i, (byte) (i/256), 'c', 'd', 'e',
-//                    'a', 'b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e',
-//                    'a', 'b', 'c', 'd', 'e' });
-//            byte[] buffer = new byte[20];
-//            file2.read(cc, 20, buffer);
-//            cc += 20;
-//
-//            System.out.println("Next 20 bytes are: " + Arrays.toString(buffer));
-//        }
+        int cc = 0;
+        for (int i = 0 ; i < 200 ; i ++ ) {
+            file2.write(cc, 20, new byte[]{(byte)i, (byte) (i/256), 'c', 'd', 'e',
+                    'a', 'b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e',
+                    'a', 'b', 'c', 'd', 'e' });
+            byte[] buffer = new byte[20];
+            file2.read(cc, 20, buffer);
+            cc += 20;
+
+            System.out.println("Next 20 bytes are: " + Arrays.toString(buffer));
+        }
         fs.delete("/","file2");
         fs.delete("/","file1");
 

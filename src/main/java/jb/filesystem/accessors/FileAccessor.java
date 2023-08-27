@@ -23,6 +23,11 @@ public class FileAccessor { // TODO: make concurrent
         this.traversor = traversor;
     }
 
+    public String getName(int fileId) {
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        return metadata.getName();
+    }
+
     public int writeToAFile(int fileId, int offset, byte[] buffer, int len) { // TODO: refactor
         if (offset > getFileSize(fileId)) { // TODO: should I thrown an exception in this case?
             throw new IllegalArgumentException("Offset out of file");
@@ -72,7 +77,7 @@ public class FileAccessor { // TODO: make concurrent
         return blockId;
     }
 
-    public void deleteFile(int fileId) { // TODO: should be called only from a directory
+    public void deleteFile(int fileId) {
         while (getAllocatedBlocksCount(fileId) > 0) {
             deleteLastBlock(fileId);
         }
@@ -98,6 +103,14 @@ public class FileAccessor { // TODO: make concurrent
         }
     }
 
+    private void shrinkFile(int fileId, int targetBytes) { // TODO: expose this method
+        while (getAllocatedFileSize(fileId) >= targetBytes + DataBlock.BLOCK_SIZE_BYTES) {
+            deleteLastBlock(fileId);
+        }
+        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
+        metadata.maybeReduceFileSize(targetBytes);
+    }
+
     public int getFileSize(int fileId) {
         FileMetadata metadata = metadataManager.getFileMetadata(fileId);
         return metadata.getFileSize();
@@ -121,6 +134,10 @@ public class FileAccessor { // TODO: make concurrent
         int lastDataBlockId = traversor.getLeaf(traversable, getAllocatedBlocksCount(fileId)-1);
         traversor.deleteLastLeaf(traversable);
         dataBlocksManager.deallocateBlock(lastDataBlockId);
+
+        metadata = metadataManager.getFileMetadata(fileId);
+        metadata.maybeReduceFileSize(getAllocatedFileSize(fileId));
+        metadataManager.saveBlock(fileId, metadata);
     }
 
     private int getAllocatedFileSize(int fileId) {
@@ -133,10 +150,5 @@ public class FileAccessor { // TODO: make concurrent
         int blockId = dataBlocksManager.allocateBlock();
         traversor.appendLeaf(traversable, blockId);
         metadataManager.saveBlock(fileId, metadata);
-    }
-
-    public String getName(int fileId) {
-        FileMetadata metadata = metadataManager.getFileMetadata(fileId);
-        return metadata.getName();
     }
 }

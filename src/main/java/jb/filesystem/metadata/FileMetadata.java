@@ -111,6 +111,10 @@ public class FileMetadata implements MetadataBlock {
         this.fileSize = Math.max(fileSize, this.fileSize);
     }
 
+    public void maybeReduceFileSize(int fileSize) {
+        this.fileSize = Math.min(fileSize, this.fileSize);
+    }
+
     public void removeLastDataBlock() {
         dataBlocks.remove(dataBlocks.size()-1);
     }
