@@ -1,15 +1,15 @@
 package jb.filesystem;
 
-import jb.filesystem.blockmanager.DataBlocksManager;
-import jb.filesystem.blockmanager.MetadataBlocksManager;
-import jb.filesystem.blockmanager.StoredDataBlocksManager;
-import jb.filesystem.blockmanager.StoredMetadataManager;
-import jb.filesystem.accessors.FileAccessor;
+import jb.filesystem.blocks.blockmanager.DataBlocksManager;
+import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
+import jb.filesystem.blocks.blockmanager.StoredDataBlocksManager;
+import jb.filesystem.blocks.blockmanager.StoredMetadataManager;
+import jb.filesystem.files.accessors.FileAccessor;
 import jb.filesystem.storage.BitStorage;
-import jb.filesystem.traversing.Traversor;
+import jb.filesystem.blocks.traversing.Traversor;
 import jb.filesystem.utils.PersistentBitmask;
-import jb.filesystem.metadata.FileMetadata;
-import jb.filesystem.data.DataBlock;
+import jb.filesystem.blocks.metadata.FileMetadata;
+import jb.filesystem.blocks.data.DataBlock;
 import jb.filesystem.storage.DataBlocksStorage;
 import jb.filesystem.storage.InMemoryStorage;
 import jb.filesystem.storage.MetadataStorage;

@@ -1,10 +1,10 @@
 package jb.filesystem.files;
 
-import jb.filesystem.accessors.DirectoryAccessorI;
-import jb.filesystem.accessors.FileAccessorI;
-import jb.filesystem.blockmanager.MetadataBlocksManager;
-import jb.filesystem.metadata.FileType;
-import jb.filesystem.metadata.MetadataBlock;
+import jb.filesystem.files.accessors.DirectoryAccessorI;
+import jb.filesystem.files.accessors.FileAccessorI;
+import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
+import jb.filesystem.blocks.metadata.FileType;
+import jb.filesystem.blocks.metadata.MetadataBlock;
 
 public class FileFactory { // TODO: rename
     private final MetadataBlocksManager metadataManager;

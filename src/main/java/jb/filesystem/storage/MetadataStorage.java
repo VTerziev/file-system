@@ -1,7 +1,9 @@
 package jb.filesystem.storage;
 
-import jb.filesystem.metadata.MetadataBlock;
-import jb.filesystem.metadata.MetadataBlocksFactory;
+import jb.filesystem.blocks.metadata.MetadataBlock;
+import jb.filesystem.blocks.metadata.MetadataBlocksFactory;
+
+import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
 public class MetadataStorage extends TypedStorage<MetadataBlock> {
     private final MetadataBlocksFactory factory;
@@ -13,7 +15,7 @@ public class MetadataStorage extends TypedStorage<MetadataBlock> {
 
     @Override
     int getByteSizeOfT() {
-        return MetadataBlock.BLOCK_SIZE_BYTES;
+        return CONFIG.METADATA_BLOCK_SIZE_BYTES;
     }
 
     @Override

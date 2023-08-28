@@ -1,6 +1,6 @@
 package jb.filesystem.files;
 
-import jb.filesystem.accessors.FileAccessorI;
+import jb.filesystem.files.accessors.FileAccessorI;
 
 public class RegularFile implements FileI {
 

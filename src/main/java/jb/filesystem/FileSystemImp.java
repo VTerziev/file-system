@@ -1,7 +1,7 @@
 package jb.filesystem;
 
-import jb.filesystem.accessors.DirectoryAccessorI;
-import jb.filesystem.accessors.FileAccessorI;
+import jb.filesystem.files.accessors.DirectoryAccessorI;
+import jb.filesystem.files.accessors.FileAccessorI;
 import jb.filesystem.files.FileFactory;
 import jb.filesystem.files.FileI;
 

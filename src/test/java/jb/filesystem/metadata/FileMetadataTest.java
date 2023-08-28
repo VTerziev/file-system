@@ -1,5 +1,6 @@
 package jb.filesystem.metadata;
 
+import jb.filesystem.blocks.metadata.FileMetadata;
 import org.junit.Assert;
 import org.junit.Test;
 

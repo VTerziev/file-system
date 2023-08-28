@@ -1,13 +1,22 @@
 package jb.filesystem.init;
 
-import jb.filesystem.accessors.*;
 import jb.filesystem.files.FileFactory;
 import jb.filesystem.FileSystemI;
 import jb.filesystem.FileSystemImp;
-import jb.filesystem.blockmanager.DataBlocksManager;
-import jb.filesystem.blockmanager.MetadataBlocksManager;
+import jb.filesystem.blocks.blockmanager.DataBlocksManager;
+import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
+import jb.filesystem.files.accessors.DirectoryAccessor;
+import jb.filesystem.files.accessors.DirectoryAccessorI;
+import jb.filesystem.files.accessors.FileAccessor;
+import jb.filesystem.files.accessors.FileAccessorI;
 import jb.filesystem.storage.ByteStorage;
-import jb.filesystem.traversing.Traversor;
+import jb.filesystem.files.synchronization.FileLocksProvider;
+import jb.filesystem.files.synchronization.SimpleLocksProvider;
+import jb.filesystem.files.synchronization.SynchronizedDirectoryAccessor;
+import jb.filesystem.files.synchronization.SynchronizedFileAccessor;
+import jb.filesystem.blocks.traversing.Traversor;
+
+import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
 public class FileSystemInitializer { // TODO: maybe refactor the constructor
     private final FileAccessorI fileAccessor;
@@ -15,11 +24,15 @@ public class FileSystemInitializer { // TODO: maybe refactor the constructor
     private final FileFactory fileFactory;
 
     public FileSystemInitializer(ByteStorage storage) {
-        DataBlockManagersProvider provider = new DataBlockManagersProvider(storage);
+        FileSystemConfig config = new FileSystemConfig(storage.getSize());
+        FileSystemConfig.setStaticConfig(config);
+
+        StorageSegmentor segmentor = new StorageSegmentor(storage);
+        DataBlockManagersProvider provider = new DataBlockManagersProvider(storage, segmentor);
         DataBlocksManager dataBlockManager = provider.getDataBlockManager();
         MetadataBlocksManager metadataBlockManager = provider.getMetadataBlockManager();
         Traversor traversor = new Traversor();
-        FileLocksProvider locksProvider = new SimpleLocksProvider(StorageSegmentor.COUNT_METADATA_BLOCKS);
+        FileLocksProvider locksProvider = new SimpleLocksProvider(CONFIG.COUNT_METADATA_BLOCKS);
 
         this.fileAccessor = buildFileAccessor(metadataBlockManager, dataBlockManager, traversor, locksProvider);
         this.directoryAccessor = buildDirectoryAccessor(metadataBlockManager, fileAccessor, locksProvider);

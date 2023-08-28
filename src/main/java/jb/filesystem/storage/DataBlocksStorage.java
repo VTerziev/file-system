@@ -1,6 +1,8 @@
 package jb.filesystem.storage;
 
-import jb.filesystem.data.DataBlock;
+import jb.filesystem.blocks.data.DataBlock;
+
+import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
 public class DataBlocksStorage extends TypedStorage<DataBlock> {
 
@@ -10,7 +12,7 @@ public class DataBlocksStorage extends TypedStorage<DataBlock> {
 
     @Override
     int getByteSizeOfT() {
-        return DataBlock.BLOCK_SIZE_BYTES;
+        return CONFIG.DATA_BLOCK_SIZE_BYTES;
     }
 
     @Override
