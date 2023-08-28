@@ -11,7 +11,7 @@ import jb.filesystem.utils.SplitByBlocks;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
-public class FileAccessor implements FileAccessorI { // TODO: make concurrent
+public class FileAccessor implements FileAccessorI {
 
     private final MetadataBlocksManager metadataManager;
     private final DataBlocksManager dataBlocksManager;
@@ -30,8 +30,8 @@ public class FileAccessor implements FileAccessorI { // TODO: make concurrent
         return metadata.getName();
     }
 
-    public int writeToAFile(int fileId, int offset, byte[] buffer, int len) { // TODO: refactor
-        if (offset > getFileSize(fileId)) { // TODO: should I thrown an exception in this case?
+    public int writeToAFile(int fileId, int offset, byte[] buffer, int len) {
+        if (offset > getFileSize(fileId)) {
             throw new IllegalArgumentException("Offset out of file");
         }
 
@@ -51,11 +51,11 @@ public class FileAccessor implements FileAccessorI { // TODO: make concurrent
             maybeIncreaseFileSize(fileId, endByteOfBlock);
             dataBlocksManager.saveBlock(blockIdToWriteTo, blockToWriteTo);
         }
-        return 0; // TODO: fix
+        return len;
     }
 
-    public int readFromFile(int fileId, int offset, int len, byte[] buffer) { // TODO: refactor arguments
-        if (offset+len > getFileSize(fileId)) { // TODO: should I thrown an exception in this case?
+    public int readFromFile(int fileId, int offset, byte[] buffer, int len) {
+        if (offset+len > getFileSize(fileId)) {
             throw new IllegalArgumentException("Offset out of file");
         }
 
@@ -69,7 +69,7 @@ public class FileAccessor implements FileAccessorI { // TODO: make concurrent
             DataBlock readBlock = dataBlocksManager.getBlock(blockIdToReadFrom);
             readBlock.read(startByteOfBlock%CONFIG.DATA_BLOCK_SIZE_BYTES, startByteOfBlock-offset, endByteOfBlock-offset, buffer);
         }
-        return 0; // TODO: fix
+        return len;
     }
 
     public int createFile(String name) {
@@ -99,7 +99,6 @@ public class FileAccessor implements FileAccessorI { // TODO: make concurrent
 
     private void extendFile(int fileId, int requiredBytes) {
         while (getAllocatedFileSize(fileId) < requiredBytes) {
-            // TODO: this happens twice the first time, because blockId 0 is interpreted as empty
             addADataBlockToAFile(fileId);
         }
     }

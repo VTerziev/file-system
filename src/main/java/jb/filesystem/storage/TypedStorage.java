@@ -13,11 +13,10 @@ public abstract class TypedStorage<T> {
             byte[] b = new byte[getByteSizeOfT()];
             int x = storage.read(i*getByteSizeOfT(), getByteSizeOfT(), b);
             if ( x != getByteSizeOfT() ) {
-                throw new IllegalStateException(); // TODO: refactor?
+                throw new IllegalStateException("Could not read the requested number of bytes");
             }
             buffer[i-offset] = decodeT(b);
         }
-        // TODO: check if there are actually 'len' blocks
         return len;
     }
 
@@ -26,10 +25,9 @@ public abstract class TypedStorage<T> {
             byte[] b = encodeT(buffer[i-offset]);
             int x = storage.write(i*getByteSizeOfT(), getByteSizeOfT(), b);
             if ( x != getByteSizeOfT() ) {
-                throw new IllegalStateException(); // TODO: refactor?
+                throw new IllegalStateException("Could not write the requested number of bytes");
             }
         }
-        // TODO: check if there are actually 'len' blocks
         return len;
     }
 

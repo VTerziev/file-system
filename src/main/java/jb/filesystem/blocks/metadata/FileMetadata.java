@@ -90,7 +90,10 @@ public class FileMetadata implements MetadataBlock {
     }
 
     public void addDataBlock(int dataBlockId) {
-        dataBlocks.add(dataBlockId); // TODO: safety checks
+        if (dataBlocks.size() >= CONFIG.FILE_METADATA_MAX_COUNT_DATA_BLOCKS) {
+            throw new IllegalStateException("Too many data blocks");
+        }
+        dataBlocks.add(dataBlockId);
     }
 
     public int getFileSize() {

@@ -10,7 +10,7 @@ public class MetadataStorage extends TypedStorage<MetadataBlock> {
 
     public MetadataStorage (ByteStorage storage) {
         super(storage);
-        this.factory = new MetadataBlocksFactory(); // TODO: give as parameter
+        this.factory = new MetadataBlocksFactory(); // TODO: inject, instead of constructing here
     }
 
     @Override

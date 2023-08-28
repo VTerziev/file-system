@@ -1,6 +1,5 @@
 package jb.filesystem.blocks.metadata;
 
-// TODO: is it a factory?
 public class MetadataBlocksFactory {
 
     public MetadataBlock buildBlock(byte[] bytes) {

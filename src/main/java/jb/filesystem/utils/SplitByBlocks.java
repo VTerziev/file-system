@@ -3,7 +3,7 @@ package jb.filesystem.utils;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class SplitByBlocks { // TODO: make an iterator?
+public class SplitByBlocks {
     private final int blockSize;
     private final int start;
     private final int end;

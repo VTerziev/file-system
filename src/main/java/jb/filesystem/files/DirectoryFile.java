@@ -2,7 +2,7 @@ package jb.filesystem.files;
 
 import jb.filesystem.files.accessors.DirectoryAccessorI;
 
-public class DirectoryFile implements FileI { // TODO
+public class DirectoryFile implements FileI {
     private final int fileId;
     private final DirectoryAccessorI directoryAccessor;
 

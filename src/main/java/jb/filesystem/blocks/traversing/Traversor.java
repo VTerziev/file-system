@@ -28,7 +28,7 @@ public class Traversor {
             }
             leafOffset -= countLeaves;
         }
-        throw new IllegalArgumentException("Leaf offset out of bounds"); // TODO: maybe return optional?
+        throw new IllegalArgumentException("Leaf offset out of bounds");
     }
 
     public void appendLeaf(Traversable t, int leafId) {
@@ -49,7 +49,7 @@ public class Traversor {
             }
         }
     }
-    private boolean tryAddLeaf(Traversable t, int leafId) { // TODO: refactor this
+    private boolean tryAddLeaf(Traversable t, int leafId) {
         if (t.hasDirectLeafSlotsAvailable()) {
             t.appendDirectLeaf(leafId);
             return true;

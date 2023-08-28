@@ -3,13 +3,17 @@ package jb.filesystem.blocks.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: add checks
+import static jb.filesystem.init.FileSystemConfig.CONFIG;
+
 public class MetadataBlocksDecoder {
 
     private final byte[] bytes;
     private int offset;
 
     public MetadataBlocksDecoder(byte[] bytes) {
+        if (bytes.length != CONFIG.METADATA_BLOCK_SIZE_BYTES) {
+            throw new IllegalArgumentException("Number of bytes doesn't match");
+        }
         this.bytes = bytes;
         this.offset = 0;
     }

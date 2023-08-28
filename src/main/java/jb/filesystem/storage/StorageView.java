@@ -10,7 +10,7 @@ public class StorageView implements ByteStorage {
         this.inner = inner;
         this.offset = offset;
         this.len = len;
-        if (offset+len > inner.getSize()) { // TODO: can I make this an assert?
+        if (offset+len > inner.getSize()) {
             throw new IllegalArgumentException("The view is not strictly inside the inner storage");
         }
     }

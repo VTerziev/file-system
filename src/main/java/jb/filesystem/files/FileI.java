@@ -1,4 +1,4 @@
-package jb.filesystem.files;// TODO: package
+package jb.filesystem.files;
 
 public interface FileI {
 

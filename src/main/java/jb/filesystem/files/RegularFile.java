@@ -14,7 +14,7 @@ public class RegularFile implements FileI {
 
     @Override
     public int read(int offset, int len, byte[] buffer) {
-        return fileAccessor.readFromFile(fileId, offset, len, buffer);
+        return fileAccessor.readFromFile(fileId, offset, buffer, len);
     }
 
     @Override

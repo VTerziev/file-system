@@ -142,7 +142,7 @@ public class FileAccessorTest {
         System.out.println("File size:" + metadata.getFileSize());
 
         byte[] buffer = new byte[10];
-        fileAccessor.readFromFile(fileId, 0, 5, buffer);
+        fileAccessor.readFromFile(fileId, 0, buffer, 5);
         System.out.println(Arrays.toString(buffer));
     }
 
@@ -184,7 +184,7 @@ public class FileAccessorTest {
     private String getAllFileContent(int fileId, FileAccessor dataManager, MetadataBlocksManager metadataManager) {
         FileMetadata block = (FileMetadata) metadataManager.getBlock(fileId);
         byte[] b = new byte[block.getFileSize()];
-        dataManager.readFromFile(fileId, 0, block.getFileSize(), b);
+        dataManager.readFromFile(fileId, 0, b, block.getFileSize());
 
         StringBuilder ret = new StringBuilder();
         for (byte value : b) {

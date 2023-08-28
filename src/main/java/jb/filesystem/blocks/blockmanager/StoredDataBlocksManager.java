@@ -4,7 +4,6 @@ import jb.filesystem.blocks.data.DataBlock;
 import jb.filesystem.storage.DataBlocksStorage;
 import jb.filesystem.utils.PersistentBitmask;
 
-// TODO: make concurrent
 public class StoredDataBlocksManager implements DataBlocksManager {
     private final PersistentBitmask bitmask;
     private final DataBlocksStorage dataStorage;
@@ -15,8 +14,8 @@ public class StoredDataBlocksManager implements DataBlocksManager {
     }
 
     @Override
-    public DataBlock getBlock(int blockId) {
-        if (!bitmask.isAvailable(blockId)) {
+    public synchronized DataBlock getBlock(int blockId) {
+        if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
         DataBlock[] buffer = new DataBlock[1];
@@ -25,23 +24,23 @@ public class StoredDataBlocksManager implements DataBlocksManager {
     }
 
     @Override
-    public void saveBlock(int blockId, DataBlock block) {
+    public synchronized void saveBlock(int blockId, DataBlock block) {
         dataStorage.write(blockId, 1, new DataBlock[]{block});
     }
 
     @Override
-    public int allocateBlock() {
-        int ret = bitmask.allocateBlock();
+    public synchronized int allocateBlock() {
+        int ret = bitmask.allocateBit();
         System.out.println("Allocating data block: " + ret);
         return ret;
     }
 
     @Override
-    public void deallocateBlock(int blockId) {
-        if (!bitmask.isAvailable(blockId)) {
+    public synchronized void deallocateBlock(int blockId) {
+        if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
         System.out.println("Deallocating data block: " + blockId);
-        bitmask.deallocateBlock(blockId);
+        bitmask.deallocateBit(blockId);
     }
 }

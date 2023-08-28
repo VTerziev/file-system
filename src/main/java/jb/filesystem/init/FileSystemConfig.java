@@ -93,6 +93,7 @@ public class FileSystemConfig {
 
     }
 
+    // TODO: use DI instead of this
     public static void setStaticConfig(FileSystemConfig config) {
         CONFIG = config;
     }

@@ -27,6 +27,10 @@ public class BitStorage {
         return hasBitActive(bytes[0], index%8);
     }
 
+    public int getSize() {
+        return storage.getSize()*8;
+    }
+
     private byte setBitTo(byte b, int bitIdx, boolean value) {
         if (value) {
             return (byte) (b|(getSingle1Bitmask(bitIdx)));
@@ -36,7 +40,7 @@ public class BitStorage {
     }
 
     private boolean hasBitActive(byte b, int bitIdx) {
-        return (b&getSingle1Bitmask(bitIdx)) > 0;
+        return (b&getSingle1Bitmask(bitIdx)) != 0;
     }
 
     private byte getSingle1Bitmask(int bitIdx) {

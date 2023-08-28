@@ -4,7 +4,6 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
-// TODO: add error checking
 public class MetadataBlocksEncoder {
 
     private final byte[] result;
@@ -44,6 +43,9 @@ public class MetadataBlocksEncoder {
     public byte[] getResult() {
         while (currentOffset < CONFIG.METADATA_BLOCK_SIZE_BYTES) {
             result[currentOffset++] = 0;
+        }
+        if (result.length != CONFIG.METADATA_BLOCK_SIZE_BYTES) {
+            throw new IllegalArgumentException("Number of bytes doesn't match");
         }
         return result;
     }

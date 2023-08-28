@@ -1,7 +1,6 @@
 package jb.filesystem.blocks.blockmanager;
 
 import jb.filesystem.blocks.metadata.*;
-import jb.filesystem.metadata.*;
 
 public interface MetadataBlocksManager {
     MetadataBlock getBlock(int blockId);

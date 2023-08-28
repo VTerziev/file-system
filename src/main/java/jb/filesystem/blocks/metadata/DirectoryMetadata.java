@@ -45,7 +45,10 @@ public class DirectoryMetadata implements MetadataBlock {
     }
 
     public void setName(String newName) {
-        name = newName; // TODO: test this
+        if (newName.length() > CONFIG.DIRECTORY_METADATA_NAME_SIZE) {
+            throw new IllegalArgumentException("Name too long");
+        }
+        name = newName;
     }
 
     public List<Integer> getChildren() {
@@ -53,7 +56,9 @@ public class DirectoryMetadata implements MetadataBlock {
     }
 
     public void addChild(int fileId) {
-        // TODO: some safety checks
+        if (childrenMetadataBlocks.size() >= CONFIG.DIRECTORY_METADATA_MAX_COUNT_CHILDREN) {
+            throw new IllegalStateException("Too many children");
+        }
         childrenMetadataBlocks.add(fileId);
     }
 

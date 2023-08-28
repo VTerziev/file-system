@@ -15,15 +15,17 @@ import jb.filesystem.files.synchronization.SimpleLocksProvider;
 import jb.filesystem.files.synchronization.SynchronizedDirectoryAccessor;
 import jb.filesystem.files.synchronization.SynchronizedFileAccessor;
 import jb.filesystem.blocks.traversing.Traversor;
+import jb.filesystem.utils.PathUtils;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
-public class FileSystemInitializer { // TODO: maybe refactor the constructor
+public class FileSystemInitializer {
     private final FileAccessorI fileAccessor;
     private final DirectoryAccessorI directoryAccessor;
     private final FileFactory fileFactory;
+    private final PathUtils pathUtils;
 
-    public FileSystemInitializer(ByteStorage storage) {
+    public FileSystemInitializer(ByteStorage storage) { // TODO: maybe refactor the constructor
         FileSystemConfig config = new FileSystemConfig(storage.getSize());
         FileSystemConfig.setStaticConfig(config);
 
@@ -37,14 +39,13 @@ public class FileSystemInitializer { // TODO: maybe refactor the constructor
         this.fileAccessor = buildFileAccessor(metadataBlockManager, dataBlockManager, traversor, locksProvider);
         this.directoryAccessor = buildDirectoryAccessor(metadataBlockManager, fileAccessor, locksProvider);
         this.fileFactory = new FileFactory(metadataBlockManager, directoryAccessor, fileAccessor);
+        this.pathUtils = new PathUtils();
     }
 
     public FileSystemI init() {
         String rootDirName = "root";
         int rootDir = directoryAccessor.createDirectory(rootDirName);
-        rootDir = directoryAccessor.createDirectory(rootDirName); // TODO: fix duplication
-
-        return new FileSystemImp(fileAccessor, directoryAccessor, fileFactory, rootDir);
+        return new FileSystemImp(fileAccessor, directoryAccessor, fileFactory, rootDir, pathUtils);
     }
 
     private FileAccessorI buildFileAccessor(MetadataBlocksManager metadataBlockManager,

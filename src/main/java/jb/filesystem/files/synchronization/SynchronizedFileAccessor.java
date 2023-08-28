@@ -13,7 +13,7 @@ public class SynchronizedFileAccessor implements FileAccessorI {
     }
 
     @Override
-    public String getName(int fileId) { // TODO: refactor these to use a method wrapper
+    public String getName(int fileId) {
         locksProvider.acquireLock(fileId);
         String result = internal.getName(fileId);
         locksProvider.releaseLock(fileId);
@@ -29,9 +29,9 @@ public class SynchronizedFileAccessor implements FileAccessorI {
     }
 
     @Override
-    public int readFromFile(int fileId, int offset, int len, byte[] buffer) {
+    public int readFromFile(int fileId, int offset, byte[] buffer, int len) {
         locksProvider.acquireLock(fileId);
-        int result = internal.readFromFile(fileId, offset, len, buffer);
+        int result = internal.readFromFile(fileId, offset, buffer, len);
         locksProvider.releaseLock(fileId);
         return result;
     }

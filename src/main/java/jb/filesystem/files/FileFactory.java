@@ -6,7 +6,7 @@ import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
 import jb.filesystem.blocks.metadata.FileType;
 import jb.filesystem.blocks.metadata.MetadataBlock;
 
-public class FileFactory { // TODO: rename
+public class FileFactory {
     private final MetadataBlocksManager metadataManager;
     private final DirectoryAccessorI directoryAccessor;
     private final FileAccessorI fileAccessor;

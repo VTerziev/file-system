@@ -1,11 +1,10 @@
 package jb.filesystem.blocks.blockmanager;
 
 import jb.filesystem.blocks.metadata.*;
-import jb.filesystem.metadata.*;
 import jb.filesystem.storage.MetadataStorage;
 import jb.filesystem.utils.PersistentBitmask;
 
-public class StoredMetadataManager implements MetadataBlocksManager { // TODO: make singleton?
+public class StoredMetadataManager implements MetadataBlocksManager {
     private final PersistentBitmask bitmask;
     private final MetadataStorage metadataStorage;
 
@@ -15,8 +14,8 @@ public class StoredMetadataManager implements MetadataBlocksManager { // TODO: m
     }
 
     @Override
-    public MetadataBlock getBlock(int blockId) {
-        if (!bitmask.isAvailable(blockId)) {
+    public synchronized MetadataBlock getBlock(int blockId) {
+        if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
         MetadataBlock[] buffer = new MetadataBlock[1];
@@ -25,43 +24,43 @@ public class StoredMetadataManager implements MetadataBlocksManager { // TODO: m
     }
 
     @Override
-    public DirectoryMetadata getDirectoryMetadata(int blockId) {
+    public synchronized DirectoryMetadata getDirectoryMetadata(int blockId) {
         return (DirectoryMetadata) getBlock(blockId);
     }
 
     @Override
-    public FileMetadata getFileMetadata(int blockId) {
+    public synchronized FileMetadata getFileMetadata(int blockId) {
         return (FileMetadata) getBlock(blockId);
     }
 
     @Override
-    public DataBlocksPointers getDataBlocksPointersMetadata(int blockId) {
+    public synchronized DataBlocksPointers getDataBlocksPointersMetadata(int blockId) {
         return (DataBlocksPointers) getBlock(blockId);
     }
 
     @Override
-    public MetadataBlocksPointers getMetadataBlocksPointersMetadata(int blockId) {
+    public synchronized MetadataBlocksPointers getMetadataBlocksPointersMetadata(int blockId) {
         return (MetadataBlocksPointers) getBlock(blockId);
     }
 
     @Override
-    public void saveBlock(int blockId, MetadataBlock block) {
+    public synchronized void saveBlock(int blockId, MetadataBlock block) {
         metadataStorage.write(blockId, 1, new MetadataBlock[]{block});
     }
 
     @Override
-    public int allocateBlock() {
-        int ret = bitmask.allocateBlock();
+    public synchronized int allocateBlock() {
+        int ret = bitmask.allocateBit();
         System.out.println("Allocating meta block: " + ret);
         return ret;
     }
 
     @Override
-    public void deallocateBlock(int blockId) {
+    public synchronized void deallocateBlock(int blockId) {
         System.out.println("Deallocating meta block: " + blockId);
-        if (!bitmask.isAvailable(blockId)) {
+        if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
-        bitmask.deallocateBlock(blockId);
+        bitmask.deallocateBit(blockId);
     }
 }

@@ -4,25 +4,27 @@ import jb.filesystem.files.accessors.DirectoryAccessorI;
 import jb.filesystem.files.accessors.FileAccessorI;
 import jb.filesystem.files.FileFactory;
 import jb.filesystem.files.FileI;
+import jb.filesystem.utils.PathUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileSystemImp implements FileSystemI {
 
     private final FileAccessorI fileAccessor;
     private final DirectoryAccessorI directoryAccessor;
-    private final FileFactory fileFactory; // TODO: rename
+    private final FileFactory fileFactory;
     private final int rootDirectoryId;
+    private final PathUtils pathUtils;
 
     public FileSystemImp(FileAccessorI fileAccessor, DirectoryAccessorI directoryAccessor,
-                         FileFactory fileFactory, int rootDirId) {
+                         FileFactory fileFactory, int rootDirId, PathUtils pathUtils) {
         this.fileAccessor = fileAccessor;
         this.directoryAccessor = directoryAccessor;
         this.fileFactory = fileFactory;
         this.rootDirectoryId = rootDirId;
+        this.pathUtils = pathUtils;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class FileSystemImp implements FileSystemI {
             if (file.isRegularFile()) {
                 return directoryAccessor.deleteRegularFile(parentDirId, fileName);
             } else {
-                String dirToDeletePath = pathToDir + "/" + fileName; // TODO: refactor
+                String dirToDeletePath = pathUtils.concatenatePaths(pathToDir, fileName);
                 return deleteChildrenOf(dirToDeletePath) & directoryAccessor.deleteDirectory(parentDirId, fileName);
             }
         }).orElse(false);
@@ -92,10 +94,7 @@ public class FileSystemImp implements FileSystemI {
 
     private int getDirectoryId(String path) {
         int currentLocation = rootDirectoryId;
-        String pathSeparator = "/";
-        List<String> absolutePath = Stream.of(path.split(pathSeparator))
-                .filter(dir -> !dir.isBlank())
-                .collect(Collectors.toList());
+        List<String> absolutePath = pathUtils.splitAbsolutePath(path);
         for (String s : absolutePath) {
             Optional<Integer> file = directoryAccessor.getFileId(currentLocation, s);
             currentLocation = file.orElseThrow();

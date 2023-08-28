@@ -1,90 +1,60 @@
 package jb.filesystem.utils;
 
 import jb.filesystem.storage.BitStorage;
-import jb.filesystem.storage.InMemoryStorage;
 
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
 
 public class PersistentBitmask {
-    private final int totalBlocks;
-    private final BitSet freeBlocks;
+    private final int totalBits;
+    private final BitSet freeBits;
     private final BitStorage storage;
 
-    public PersistentBitmask(int totalBlocks, BitStorage storage) {
-        this.totalBlocks = totalBlocks;
+    public PersistentBitmask(int totalBits, BitStorage storage) {
+        this.totalBits = totalBits;
         this.storage = storage;
-        freeBlocks = new BitSet(totalBlocks);
-        for (int i = 0 ; i < totalBlocks ; i ++ ) {
+        freeBits = new BitSet(totalBits);
+        for (int i = 0 ; i < totalBits ; i ++ ) {
             if (!storage.readBit(i)) {
-                freeBlocks.set(i);
+                freeBits.set(i);
             }
         }
     }
 
-    public int allocateBlock() {
-        int freeBlock = freeBlocks.nextSetBit(0); // Find the first free block
-        if (freeBlock != -1) {
-            freeBlocks.clear(freeBlock); // Mark the block as used
-            persistToStorage(freeBlock, true);
-            return freeBlock;
+    public int allocateBit() {
+        int freeBit = freeBits.nextSetBit(0);
+        if (freeBit != -1) {
+            freeBits.clear(freeBit);
+            persistToStorage(freeBit, true);
+            return freeBit+1;
         } else {
-            throw new IllegalStateException("No available blocks.");
+            throw new IllegalStateException("No available bits.");
         }
     }
 
-    public void deallocateBlock(int blockNumber) {
-        if (blockNumber >= 0 && blockNumber < totalBlocks) {
-            freeBlocks.set(blockNumber); // Mark the block as free
-            persistToStorage(blockNumber, false);
+    public void deallocateBit(int bitNumber) {
+        bitNumber --;
+        if (bitNumber >= 0 && bitNumber < totalBits) {
+            freeBits.set(bitNumber);
+            persistToStorage(bitNumber, false);
         } else {
-            throw new IllegalArgumentException("Invalid block number.");
+            throw new IllegalArgumentException("Invalid bit number.");
         }
     }
 
-    public boolean isAvailable(int blockNumber) {
-        return !freeBlocks.get(blockNumber);
+    public boolean isAvailable(int bitNumber) {
+        return freeBits.get(bitNumber-1);
     }
 
-    public int getAvailableBlocks() {
-        return freeBlocks.cardinality();
+    public int getAvailableBits() {
+        return freeBits.cardinality();
     }
 
-    public int getUsedBlocks() {
-        return totalBlocks - freeBlocks.cardinality();
+    public int getUsedBits() {
+        return totalBits - freeBits.cardinality();
     }
 
-    public static void main(String[] args) { // TODO: refactor as a test
-        int n = 100;
-        BitStorage storage = new BitStorage(new InMemoryStorage(n/8+1));
-        storage.writeBit(42, true);
-        PersistentBitmask bitmask = new PersistentBitmask(n, storage);
-
-        // Allocate some blocks
-        int block1 = bitmask.allocateBlock();
-        int block2 = bitmask.allocateBlock();
-
-        System.out.println("Allocated blocks: " + block1 + ", " + block2);
-        System.out.println("Available blocks: " + bitmask.getAvailableBlocks());
-        System.out.println("Used blocks: " + bitmask.getUsedBlocks());
-
-        // Deallocate a block
-        bitmask.deallocateBlock(block1);
-
-        System.out.println("\nDeallocated block: " + block1);
-        System.out.println("Available blocks: " + bitmask.getAvailableBlocks());
-        System.out.println("Used blocks: " + bitmask.getUsedBlocks());
-
-        List<Integer> arr = new ArrayList<>();
-        for (int i = 0 ; i < 99 ; i ++ ) {
-            arr.add(bitmask.allocateBlock());
-            System.out.println(arr);
-        }
-    }
-
-    private void persistToStorage(int blockNumber, boolean newValue) {
-        boolean success = storage.writeBit(blockNumber, newValue);
+    private void persistToStorage(int bitNumber, boolean newValue) {
+        boolean success = storage.writeBit(bitNumber, newValue);
         if (!success) {
             throw new IllegalStateException("Could not persist the bitmask");
         }

@@ -6,7 +6,7 @@ import jb.filesystem.blocks.metadata.DirectoryMetadata;
 import java.util.List;
 import java.util.Optional;
 
-public class DirectoryAccessor implements DirectoryAccessorI { // TODO: make concurrent
+public class DirectoryAccessor implements DirectoryAccessorI {
     private final MetadataBlocksManager metadataManager;
     private final FileAccessorI fileAccessor;
 
@@ -25,7 +25,7 @@ public class DirectoryAccessor implements DirectoryAccessorI { // TODO: make con
         DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         return metadata.getChildren()
                 .stream()
-                .filter(x -> metadataManager.getBlock(x).getName().equals(fileName)) // TODO: how to build a typed MetadataBlock
+                .filter(x -> metadataManager.getBlock(x).getName().equals(fileName))
                 .findAny();
     }
 

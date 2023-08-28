@@ -1,21 +1,17 @@
 package jb.filesystem.blocks.data;
 
 public class DataBlock {
-    private byte[] bytes;
+    private final byte[] bytes;
     public DataBlock(byte[] bytes) {
         this.bytes = bytes;
     }
 
-    public void write(int offset, int l, int r, byte[] bytesToWrite) { // TODO: return something?
-        for (int i = l ; i < r ; i ++ ) {
-            bytes[i-l+offset] = bytesToWrite[i];
-        }
+    public void write(int offset, int l, int r, byte[] bytesToWrite) {
+        if (r - l >= 0) System.arraycopy(bytesToWrite, l, bytes, offset, r - l);
     }
 
-    public void read(int offset, int l, int r, byte[] buffer) { // TODO: return something?
-        for (int i = l ; i < r ; i ++ ) {
-            buffer[i] = bytes[i-l+offset];
-        }
+    public void read(int offset, int l, int r, byte[] buffer) {
+        if (r - l >= 0) System.arraycopy(bytes, offset, buffer, l, r - l);
     }
 
     public byte[] getBytes() {
