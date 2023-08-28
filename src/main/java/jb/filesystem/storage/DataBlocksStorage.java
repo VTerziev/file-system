@@ -11,17 +11,17 @@ public class DataBlocksStorage extends TypedStorage<DataBlock> {
     }
 
     @Override
-    int getByteSizeOfT() {
+    protected int getByteSizeOfT() {
         return CONFIG.DATA_BLOCK_SIZE_BYTES;
     }
 
     @Override
-    DataBlock decodeT(byte[] bytes) {
+    protected DataBlock decodeT(byte[] bytes) {
         return new DataBlock(bytes);
     }
 
     @Override
-    byte[] encodeT(DataBlock dataBlock) {
+    protected byte[] encodeT(DataBlock dataBlock) {
         return dataBlock.getBytes();
     }
 }

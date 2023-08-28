@@ -14,17 +14,17 @@ public class MetadataStorage extends TypedStorage<MetadataBlock> {
     }
 
     @Override
-    int getByteSizeOfT() {
+    protected int getByteSizeOfT() {
         return CONFIG.METADATA_BLOCK_SIZE_BYTES;
     }
 
     @Override
-    MetadataBlock decodeT(byte[] bytes) {
+    protected MetadataBlock decodeT(byte[] bytes) {
         return factory.buildBlock(bytes);
     }
 
     @Override
-    byte[] encodeT(MetadataBlock block) {
+    protected byte[] encodeT(MetadataBlock block) {
         return block.toBytes();
     }
 }

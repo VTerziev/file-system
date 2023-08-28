@@ -1,4 +1,4 @@
-package jb.filesystem.metadata;
+package jb.filesystem.blocks.metadata;
 
 import jb.filesystem.blocks.metadata.DirectoryMetadata;
 import jb.filesystem.blocks.metadata.FileType;

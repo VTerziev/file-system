@@ -90,7 +90,6 @@ public class FileSystemConfig {
                 METADATA_BLOCK_POINTER_SIZE_BYTES*DIRECTORY_METADATA_MAX_COUNT_CHILDREN) {
             throw new IllegalArgumentException("Incorrect number of bytes");
         }
-
     }
 
     // TODO: use DI instead of this
@@ -98,4 +97,8 @@ public class FileSystemConfig {
         CONFIG = config;
     }
 
+
+    public static void setDefaultConfig() {
+        CONFIG = new FileSystemConfig(100); // TODO: is this the best option
+    }
 }
