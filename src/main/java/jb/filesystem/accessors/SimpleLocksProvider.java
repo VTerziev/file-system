@@ -11,7 +11,7 @@ public class SimpleLocksProvider implements FileLocksProvider {
     public SimpleLocksProvider(int maxFileCount) {
         locks = new ArrayList<>();
         for (int i = 0 ; i < maxFileCount; i ++ ) {
-            locks.add(new ReentrantLock());
+            locks.add(new ReentrantLock()); // TODO: should this be reentrant
         }
     }
 
