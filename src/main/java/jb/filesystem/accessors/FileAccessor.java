@@ -9,7 +9,7 @@ import jb.filesystem.traversing.Traversable;
 import jb.filesystem.traversing.Traversor;
 import jb.filesystem.utils.SplitByBlocks;
 
-public class FileAccessor { // TODO: make concurrent
+public class FileAccessor implements FileAccessorI { // TODO: make concurrent
 
     private final MetadataBlocksManager metadataManager;
     private final DataBlocksManager dataBlocksManager;
@@ -77,9 +77,10 @@ public class FileAccessor { // TODO: make concurrent
         return blockId;
     }
 
-    public void deleteFile(int fileId) {
+    public boolean deleteFile(int fileId) {
         shrinkFile(fileId, 0);
         metadataManager.deallocateBlock(fileId);
+        return true;
     }
 
     public void renameFile(int fileId, String newName) {

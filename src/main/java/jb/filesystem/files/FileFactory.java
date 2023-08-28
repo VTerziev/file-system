@@ -1,19 +1,19 @@
 package jb.filesystem.files;
 
+import jb.filesystem.accessors.DirectoryAccessorI;
+import jb.filesystem.accessors.FileAccessorI;
 import jb.filesystem.blockmanager.MetadataBlocksManager;
-import jb.filesystem.accessors.DirectoryAccessor;
-import jb.filesystem.accessors.FileAccessor;
 import jb.filesystem.metadata.FileType;
 import jb.filesystem.metadata.MetadataBlock;
 
 public class FileFactory { // TODO: rename
     private final MetadataBlocksManager metadataManager;
-    private final DirectoryAccessor directoryAccessor;
-    private final FileAccessor fileAccessor;
+    private final DirectoryAccessorI directoryAccessor;
+    private final FileAccessorI fileAccessor;
 
     public FileFactory(MetadataBlocksManager metadataManager,
-                       DirectoryAccessor directoryAccessor,
-                       FileAccessor fileAccessor) {
+                       DirectoryAccessorI directoryAccessor,
+                       FileAccessorI fileAccessor) {
         this.metadataManager = metadataManager;
         this.directoryAccessor = directoryAccessor;
         this.fileAccessor = fileAccessor;

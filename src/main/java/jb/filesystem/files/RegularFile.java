@@ -1,13 +1,13 @@
 package jb.filesystem.files;
 
-import jb.filesystem.accessors.FileAccessor;
+import jb.filesystem.accessors.FileAccessorI;
 
 public class RegularFile implements FileI {
 
     private final int fileId;
-    private final FileAccessor fileAccessor;
+    private final FileAccessorI fileAccessor;
 
-    public RegularFile(int fileId, FileAccessor fileAccessor) {
+    public RegularFile(int fileId, FileAccessorI fileAccessor) {
         this.fileId = fileId;
         this.fileAccessor = fileAccessor;
     }

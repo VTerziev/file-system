@@ -1,7 +1,7 @@
 package jb.filesystem;
 
-import jb.filesystem.accessors.DirectoryAccessor;
-import jb.filesystem.accessors.FileAccessor;
+import jb.filesystem.accessors.DirectoryAccessorI;
+import jb.filesystem.accessors.FileAccessorI;
 import jb.filesystem.files.FileFactory;
 import jb.filesystem.files.FileI;
 
@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 
 public class FileSystemImp implements FileSystemI {
 
-    private final FileAccessor fileAccessor;
-    private final DirectoryAccessor directoryAccessor;
+    private final FileAccessorI fileAccessor;
+    private final DirectoryAccessorI directoryAccessor;
     private final FileFactory fileFactory; // TODO: rename
     private final int rootDirectoryId;
 
-    public FileSystemImp(FileAccessor fileAccessor, DirectoryAccessor directoryAccessor,
+    public FileSystemImp(FileAccessorI fileAccessor, DirectoryAccessorI directoryAccessor,
                          FileFactory fileFactory, int rootDirId) {
         this.fileAccessor = fileAccessor;
         this.directoryAccessor = directoryAccessor;
@@ -27,7 +27,7 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createFile(String pathToDir, String name) {
-        int parentDirId = getDirectory(pathToDir);
+        int parentDirId = getDirectoryId(pathToDir);
         int blockId = fileAccessor.createFile(name);
         directoryAccessor.addFile(parentDirId, blockId);
         return wrapFile(blockId);
@@ -35,7 +35,7 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createDirectory(String pathToParentDir, String name) {
-        int parentDirId = getDirectory(pathToParentDir);
+        int parentDirId = getDirectoryId(pathToParentDir);
         int newDirId = directoryAccessor.createDirectory(name);
         directoryAccessor.addFile(parentDirId, newDirId);
         return wrapFile(newDirId);
@@ -43,15 +43,30 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public Optional<FileI> get(String pathToDir, String name) {
-        int parentDirId = getDirectory(pathToDir);
+        int parentDirId = getDirectoryId(pathToDir);
         Optional<Integer> file = directoryAccessor.getFileId(parentDirId, name);
         return file.map(this::wrapFile);
     }
 
     @Override
     public boolean delete(String pathToDir, String fileName) {
-        int parentDirId = getDirectory(pathToDir);
-        return directoryAccessor.deleteFile(parentDirId, fileName);
+        int parentDirId = getDirectoryId(pathToDir);
+        return get(pathToDir, fileName).map(file -> {
+            if (file.isRegularFile()) {
+                return directoryAccessor.deleteRegularFile(parentDirId, fileName);
+            } else {
+                String dirToDeletePath = pathToDir + "/" + fileName; // TODO: refactor
+                return deleteChildrenOf(dirToDeletePath) & directoryAccessor.deleteDirectory(parentDirId, fileName);
+            }
+        }).orElse(false);
+    }
+
+    private boolean deleteChildrenOf(String pathToDir) {
+        List<FileI> children = listFiles(pathToDir);
+        return children.stream()
+                .map(child -> delete(pathToDir, child.getName()))
+                .reduce((x,y) -> x&y)
+                .orElse(true);
     }
 
     @Override
@@ -65,7 +80,7 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public List<FileI> listFiles(String dir) {
-        int dirId = getDirectory(dir);
+        int dirId = getDirectoryId(dir);
         return directoryAccessor.getAllFilesIn(dirId)
                 .stream().map(this::wrapFile)
                 .collect(Collectors.toList());
@@ -75,7 +90,7 @@ public class FileSystemImp implements FileSystemI {
         return fileFactory.wrapFile(fileId);
     }
 
-    public int getDirectory(String path) {
+    private int getDirectoryId(String path) {
         int currentLocation = rootDirectoryId;
         String pathSeparator = "/";
         List<String> absolutePath = Stream.of(path.split(pathSeparator))

@@ -1,12 +1,12 @@
 package jb.filesystem.files;
 
-import jb.filesystem.accessors.DirectoryAccessor;
+import jb.filesystem.accessors.DirectoryAccessorI;
 
 public class DirectoryFile implements FileI { // TODO
     private final int fileId;
-    private final DirectoryAccessor directoryAccessor;
+    private final DirectoryAccessorI directoryAccessor;
 
-    public DirectoryFile(int fileId, DirectoryAccessor directoryAccessor) {
+    public DirectoryFile(int fileId, DirectoryAccessorI directoryAccessor) {
         this.fileId = fileId;
         this.directoryAccessor = directoryAccessor;
     }

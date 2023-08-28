@@ -2,17 +2,15 @@ package jb.filesystem.accessors;
 
 import jb.filesystem.blockmanager.MetadataBlocksManager;
 import jb.filesystem.metadata.DirectoryMetadata;
-import jb.filesystem.metadata.FileType;
-import jb.filesystem.metadata.MetadataBlock;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DirectoryAccessor { // TODO: make concurrent
+public class DirectoryAccessor implements DirectoryAccessorI { // TODO: make concurrent
     private final MetadataBlocksManager metadataManager;
-    private final FileAccessor fileAccessor;
+    private final FileAccessorI fileAccessor;
 
-    public DirectoryAccessor(MetadataBlocksManager metadataManager, FileAccessor fileAccessor) {
+    public DirectoryAccessor(MetadataBlocksManager metadataManager, FileAccessorI fileAccessor) {
         this.metadataManager = metadataManager;
         this.fileAccessor = fileAccessor;
     }
@@ -27,36 +25,41 @@ public class DirectoryAccessor { // TODO: make concurrent
         DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         return metadata.getChildren()
                 .stream()
-                .filter(x -> metadataManager.getBlock(x).getName().equals(fileName))
+                .filter(x -> metadataManager.getBlock(x).getName().equals(fileName)) // TODO: how to build a typed MetadataBlock
                 .findAny();
     }
 
-    public boolean deleteFile(int directoryId, String fileName) {
+    public boolean deleteRegularFile(int directoryId, String fileName) {
         Optional<Integer> fileIdOptional = getFileId(directoryId, fileName);
-        return fileIdOptional.map(id -> deleteFileById(directoryId, id)).orElse(false);
+
+        return fileIdOptional.map(fileId -> {
+            removeChildFromDir(directoryId, fileId);
+            return fileAccessor.deleteFile(fileId);
+        }).orElse(false);
     }
 
-    public boolean deleteFilesInDir(int directoryId) {
-        return getAllFilesIn(directoryId)
-                .stream()
-                .map(fileId -> deleteFileById(directoryId, fileId))
-                .reduce((x,y) -> x|y).orElse(true);
+    public boolean deleteDirectory(int parentDirId, String directoryToDelete) {
+        Optional<Integer> fileIdOptional = getFileId(parentDirId, directoryToDelete);
 
-    }
-
-    private boolean deleteFileById(int directoryId, int fileId) {
-        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
-        metadata.deleteChild(fileId);
-        metadataManager.saveBlock(directoryId, metadata);
-
-        MetadataBlock fileMetadata = metadataManager.getBlock(fileId);
-        if (fileMetadata.getType() == FileType.DIRECTORY) { // TODO: refactor
-            return deleteFilesInDir(fileId);
-        } else if (fileMetadata.getType() == FileType.REGULAR){
-            fileAccessor.deleteFile(fileId);
+        return fileIdOptional.map(fileId -> {
+            removeChildFromDir(parentDirId, fileId);
+            assertDirEmpty(fileId);
+            metadataManager.deallocateBlock(fileId);
             return true;
+        }).orElse(false);
+    }
+
+    private void removeChildFromDir(int dirId, int childId) {
+        DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(dirId);
+        metadata.deleteChild(childId);
+        metadataManager.saveBlock(dirId, metadata);
+    }
+
+    private void assertDirEmpty(int dirId) {
+        DirectoryMetadata dirToDeleteMetadata = metadataManager.getDirectoryMetadata(dirId);
+        if (!dirToDeleteMetadata.getChildren().isEmpty()) {
+            throw new IllegalArgumentException("Cannot delete a non-empty directory");
         }
-        throw new IllegalStateException("File type not found");
     }
 
     public List<Integer> getAllFilesIn(int directoryId) {
