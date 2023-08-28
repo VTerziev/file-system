@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DirectoryMetadataTest {
+public class DataBlocksPointersTest {
     @BeforeClass
     public static void setup() {
         FileSystemConfig.setDefaultConfig();
@@ -13,13 +13,13 @@ public class DirectoryMetadataTest {
 
     @Test
     public void toAndFromBytes() {
-        DirectoryMetadata metadata = new DirectoryMetadata("dir");
-        metadata.addChild(42);
-        metadata.addChild(43);
+        DataBlocksPointers metadata = new DataBlocksPointers();
+        metadata.addDataBlock(42);
+        metadata.addDataBlock(43);
 
-        DirectoryMetadata convertedMetadata = new DirectoryMetadata(metadata.toBytes());
+        DataBlocksPointers convertedMetadata = new DataBlocksPointers(metadata.toBytes());
 
         Assert.assertEquals(metadata.getName(), convertedMetadata.getName());
-        Assert.assertEquals(metadata.getChildren(), convertedMetadata.getChildren());
+        Assert.assertEquals(metadata.getDataBlocks(), convertedMetadata.getDataBlocks());
     }
 }

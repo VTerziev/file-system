@@ -1,26 +1,17 @@
 package jb.filesystem.blocks.metadata;
 
 import jb.filesystem.blocks.metadata.FileMetadata;
+import jb.filesystem.init.FileSystemConfig;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 public class FileMetadataTest {
-
-    // TODO: add more tests
-    @Test
-    public void createFromByteArray() {
-        byte[] b = new byte[]{'a', 's', 'd', 'f', 0, 0,
-                0, 1,
-                1, 1,
-                0, 0,
-                0, 0,
-                0, 0};
-        FileMetadata m = new FileMetadata(b);
-
-        Assert.assertEquals("asdf", m.getName());
-        Assert.assertEquals(Arrays.asList(1, 257), m.getDataBlocks());
+    @BeforeClass
+    public static void setup() {
+        FileSystemConfig.setDefaultConfig();
     }
 
     @Test
@@ -29,12 +20,13 @@ public class FileMetadataTest {
         metadata.getDataBlocks().add(14);
         metadata.getDataBlocks().add(13);
         metadata.maybeIncreaseFileSize(72);
-        FileMetadata metadata2 = new FileMetadata(metadata.toBytes());
+        metadata.appendIndirectBlock(42);
 
-        Assert.assertEquals(metadata.getName(), metadata2.getName());
-        System.out.println(metadata2.getDataBlocks());
-        Assert.assertEquals(metadata.getDataBlocks(), metadata2.getDataBlocks());
-        System.out.println(metadata.getFileSize());
-        Assert.assertEquals(metadata.getFileSize(), metadata2.getFileSize());
+        FileMetadata convertedMetadata = new FileMetadata(metadata.toBytes());
+
+        Assert.assertEquals(metadata.getName(), convertedMetadata.getName());
+        Assert.assertEquals(metadata.getDataBlocks(), convertedMetadata.getDataBlocks());
+        Assert.assertEquals(metadata.getFileSize(), convertedMetadata.getFileSize());
+        Assert.assertEquals(metadata.getIndirectDataBlocks(), convertedMetadata.getIndirectDataBlocks());
     }
 }
