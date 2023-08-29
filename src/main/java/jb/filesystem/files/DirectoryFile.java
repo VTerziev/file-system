@@ -45,4 +45,9 @@ public class DirectoryFile implements FileI {
     public void rename(String newName) {
         directoryAccessor.renameDirectory(fileId, newName);
     }
+
+    @Override
+    public int getSize() {
+        return 0;
+    }
 }

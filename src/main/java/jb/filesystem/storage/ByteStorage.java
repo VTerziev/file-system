@@ -1,6 +1,7 @@
 package jb.filesystem.storage;
 
 public interface ByteStorage {
+    // TODO: maybe don't return anything
     // How many bytes were read
     int read(int offset, int len, byte[] buffer);
 

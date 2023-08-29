@@ -24,6 +24,7 @@ public class FileSystemInitializer {
     private final DirectoryAccessorI directoryAccessor;
     private final FileFactory fileFactory;
     private final PathUtils pathUtils;
+    private final ByteStorage storage;
 
     public FileSystemInitializer(ByteStorage storage) { // TODO: maybe refactor the constructor
         FileSystemConfig config = new FileSystemConfig(storage.getSize());
@@ -36,6 +37,7 @@ public class FileSystemInitializer {
         Traversor traversor = new Traversor();
         FileLocksProvider locksProvider = new SimpleLocksProvider(CONFIG.COUNT_METADATA_BLOCKS);
 
+        this.storage = storage;
         this.fileAccessor = buildFileAccessor(metadataBlockManager, dataBlockManager, traversor, locksProvider);
         this.directoryAccessor = buildDirectoryAccessor(metadataBlockManager, fileAccessor, locksProvider);
         this.fileFactory = new FileFactory(metadataBlockManager, directoryAccessor, fileAccessor);
@@ -43,9 +45,15 @@ public class FileSystemInitializer {
     }
 
     public FileSystemI init() {
-        String rootDirName = "root";
-        int rootDir = directoryAccessor.createDirectory(rootDirName);
-        return new FileSystemImp(fileAccessor, directoryAccessor, fileFactory, rootDir, pathUtils);
+        if (isInitialized()) {
+            int rootDir = readRootDir();
+            return new FileSystemImp(fileAccessor, directoryAccessor, fileFactory, rootDir, pathUtils);
+        } else {
+            String rootDirName = "root";
+            int rootDir = directoryAccessor.createDirectory(rootDirName);
+            writeRootDir(rootDir);
+            return new FileSystemImp(fileAccessor, directoryAccessor, fileFactory, rootDir, pathUtils);
+        }
     }
 
     private FileAccessorI buildFileAccessor(MetadataBlocksManager metadataBlockManager,
@@ -59,5 +67,21 @@ public class FileSystemInitializer {
                                                      FileAccessorI fileAccessor, FileLocksProvider locksProvider) {
         DirectoryAccessorI inner = new DirectoryAccessor(metadataBlocksManager, fileAccessor);
         return new SynchronizedDirectoryAccessor(inner, locksProvider);
+    }
+
+
+    // TODO: refactor
+    private boolean isInitialized() {
+        return readRootDir() > 0;
+    }
+
+    private int readRootDir() {
+        byte[] buffer = new byte[1];
+        storage.read(0, 1, buffer);
+        return buffer[0];
+    }
+
+    private void writeRootDir(int rootDir) {
+        storage.write(0, 1, new byte[]{(byte)rootDir});
     }
 }

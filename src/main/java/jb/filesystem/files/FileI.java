@@ -12,4 +12,5 @@ public interface FileI {
     boolean isRegularFile();
     boolean isDirectory();
     void rename(String newName);
+    int getSize();
 }

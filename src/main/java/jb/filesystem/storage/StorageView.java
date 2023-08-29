@@ -26,9 +26,6 @@ public class StorageView implements ByteStorage {
     public int write(int offset, int len, byte[] buffer) {
         int newOffset = offset + this.offset;
         int newLen = Math.min(len, this.len + this.offset - newOffset);
-        if ( newLen < len ) {
-            System.out.println("New len < len");
-        }
         return inner.write(newOffset, newLen, buffer);
     }
 

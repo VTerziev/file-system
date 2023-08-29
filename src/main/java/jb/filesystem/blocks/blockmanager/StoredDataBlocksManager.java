@@ -30,9 +30,7 @@ public class StoredDataBlocksManager implements DataBlocksManager {
 
     @Override
     public synchronized int allocateBlock() {
-        int ret = bitmask.allocateBit();
-        System.out.println("Allocating data block: " + ret);
-        return ret;
+        return bitmask.allocateBit();
     }
 
     @Override
@@ -40,7 +38,6 @@ public class StoredDataBlocksManager implements DataBlocksManager {
         if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
-        System.out.println("Deallocating data block: " + blockId);
         bitmask.deallocateBit(blockId);
     }
 }

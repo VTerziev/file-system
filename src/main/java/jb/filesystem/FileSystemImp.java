@@ -29,6 +29,9 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createFile(String pathToDir, String name) {
+        if (get(pathToDir, name).isPresent()) {
+            throw new IllegalArgumentException("File with that name already exists");
+        }
         int parentDirId = getDirectoryId(pathToDir);
         int blockId = fileAccessor.createFile(name);
         directoryAccessor.addFile(parentDirId, blockId);
@@ -37,6 +40,9 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createDirectory(String pathToParentDir, String name) {
+        if (get(pathToParentDir, name).isPresent()) {
+            throw new IllegalArgumentException("File with that name already exists");
+        }
         int parentDirId = getDirectoryId(pathToParentDir);
         int newDirId = directoryAccessor.createDirectory(name);
         directoryAccessor.addFile(parentDirId, newDirId);

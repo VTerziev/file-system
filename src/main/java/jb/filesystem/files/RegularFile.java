@@ -46,4 +46,9 @@ public class RegularFile implements FileI {
     public void rename(String newName) {
         fileAccessor.renameFile(fileId, newName);
     }
+
+    @Override
+    public int getSize() {
+        return fileAccessor.getFileSize(fileId);
+    }
 }

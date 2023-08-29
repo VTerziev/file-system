@@ -50,14 +50,11 @@ public class StoredMetadataManager implements MetadataBlocksManager {
 
     @Override
     public synchronized int allocateBlock() {
-        int ret = bitmask.allocateBit();
-        System.out.println("Allocating meta block: " + ret);
-        return ret;
+        return bitmask.allocateBit();
     }
 
     @Override
     public synchronized void deallocateBlock(int blockId) {
-        System.out.println("Deallocating meta block: " + blockId);
         if (bitmask.isAvailable(blockId)) {
             throw new IllegalArgumentException("Block " + blockId + " is not allocated");
         }
