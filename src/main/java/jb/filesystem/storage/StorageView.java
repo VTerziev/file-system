@@ -1,5 +1,9 @@
 package jb.filesystem.storage;
 
+/**
+ * A class, representing view of an existing storage. Exposes only a sub-interval of the whole storage and makes it
+ * look like it's the whole storage.
+ */
 public class StorageView implements ByteStorage {
 
     private final ByteStorage inner;

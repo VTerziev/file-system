@@ -8,13 +8,13 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
-public class DataBlockPointersTraversable implements Traversable {
+public class DataBlockPointersNode implements TreeNode {
 
     private final DataBlocksPointers pointers;
     private final int id;
     private final MetadataBlocksManager metadataManager;
 
-    public DataBlockPointersTraversable(DataBlocksPointers pointers, int id, MetadataBlocksManager metadataManager) {
+    public DataBlockPointersNode(DataBlocksPointers pointers, int id, MetadataBlocksManager metadataManager) {
         this.pointers = pointers;
         this.id = id;
         this.metadataManager = metadataManager;
@@ -65,13 +65,13 @@ public class DataBlockPointersTraversable implements Traversable {
     }
 
     @Override
-    public List<Traversable> getNonLeaves() {
+    public List<TreeNode> getNonLeaves() {
         return Collections.emptyList();
     }
 
     @Override
     public void createNewNonLeaf() {
-        throw new IllegalStateException("Can't create a traversable");
+        throw new IllegalStateException("Can't create a non-leaf");
     }
 
     @Override

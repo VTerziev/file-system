@@ -21,12 +21,12 @@ public class Main {
             FileSystemI fs = initializer.init();
 
 //            fs.createDirectory("/", "dir1");
-            System.out.println(fs.get("/", "dir1"));
+            System.out.println(fs.get("/dir1"));
 
-            System.out.println(fs.get("/","file1"));
-            FileI file = fs.createFile("/", "file1");
-            System.out.println(fs.get("/","file1"));
-//
+            System.out.println(fs.get("/file1"));
+            FileI file = fs.createFile("/", "file2");
+            System.out.println(fs.get("/file2"));
+
 //            FileI file2 = fs.createFile("/","file2");
 //            System.out.println(fs.get("/","file2"));
 //

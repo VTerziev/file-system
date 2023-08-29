@@ -3,6 +3,11 @@ package jb.filesystem.utils;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * A class, which splits an interval (for example, from 2 to 12) into several smaller intervals, breaking at regular
+ * intervals. For example, we can split the interval [5, 35), breaking at every multiple of 10. This would result in
+ * 4 sub-intervals: [5, 10), [10, 20), [20, 30), [30, 35).
+ */
 public class SplitByBlocks {
     private final int blockSize;
     private final int start;

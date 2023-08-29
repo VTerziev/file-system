@@ -4,6 +4,9 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
+/**
+ * A helper class, which supports encoding a metadata block into a byte array.
+ */
 public class MetadataBlocksEncoder {
 
     private final byte[] result;

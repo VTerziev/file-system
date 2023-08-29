@@ -5,6 +5,10 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
+/**
+ * A metadata block, containing all the information about a given directory. Contains a directory name and a list of
+ * files (metadata block ids), which are contained inside.
+ */
 public class DirectoryMetadata implements MetadataBlock {
     private static final FileType FILE_TYPE = FileType.DIRECTORY;
     private String name;

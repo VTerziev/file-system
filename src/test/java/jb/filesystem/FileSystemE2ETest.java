@@ -65,16 +65,16 @@ public class FileSystemE2ETest {
 
         // Deleting file1
         Assert.assertEquals(List.of("dir1", "file1"), listFileNamesIn(fs, "/"));
-        fs.delete("/", "file1");
+        fs.delete("/file1");
         Assert.assertEquals(List.of("dir1"), listFileNamesIn(fs, "/"));
 
         // Deleting file4
         Assert.assertEquals(List.of("file4", "file5"), listFileNamesIn(fs, "/dir1/dir2"));
-        fs.delete("/dir1/dir2", "file4");
+        fs.delete("/dir1/dir2/file4");
         Assert.assertEquals(List.of("file5"), listFileNamesIn(fs, "/dir1/dir2"));
 
         // Deleting the whole folder dir1 and its contents
-        fs.delete("/", "dir1");
+        fs.delete("/dir1");
         Assert.assertEquals(List.of(), listFileNamesIn(fs, "/"));
     }
 
@@ -102,7 +102,7 @@ public class FileSystemE2ETest {
     public void writeAndReadFromFile() {
         FileSystemI fs = initializer.init();
         fs.createFile("/", "file1");
-        FileI file = fs.get("/", "file1").get();
+        FileI file = fs.get("/file1").get();
 
         byte[] buffer = new byte[20];
         Assert.assertTrue(file.isRegularFile());

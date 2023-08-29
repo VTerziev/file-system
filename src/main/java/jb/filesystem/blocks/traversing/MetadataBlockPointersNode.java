@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
-public class MetadataBlockPointersTraversable implements Traversable {
+public class MetadataBlockPointersNode implements TreeNode {
     private final MetadataBlocksPointers pointers;
     private final int id;
     private final MetadataBlocksManager metadataManager;
 
-    public MetadataBlockPointersTraversable(MetadataBlocksPointers pointers, int id,
-                                            MetadataBlocksManager metadataManager) {
+    public MetadataBlockPointersNode(MetadataBlocksPointers pointers, int id,
+                                     MetadataBlocksManager metadataManager) {
         this.pointers = pointers;
         this.id = id;
         this.metadataManager = metadataManager;
@@ -60,7 +60,7 @@ public class MetadataBlockPointersTraversable implements Traversable {
     }
 
     @Override
-    public List<Traversable> getNonLeaves() {
+    public List<TreeNode> getNonLeaves() {
         return pointers.getMetadataBlocks().stream()
                 .map(this::getNonLeaf)
                 .collect(Collectors.toList());
@@ -70,13 +70,13 @@ public class MetadataBlockPointersTraversable implements Traversable {
         return pointers.getMaxDepth() == 1;
     }
 
-    private Traversable getNonLeaf(int blockId) {
+    private TreeNode getNonLeaf(int blockId) {
         if (shouldUseDataBlockPointers()) {
             DataBlocksPointers block = metadataManager.getDataBlocksPointersMetadata(blockId);
-            return new DataBlockPointersTraversable(block, blockId, metadataManager);
+            return new DataBlockPointersNode(block, blockId, metadataManager);
         } else {
             MetadataBlocksPointers block = metadataManager.getMetadataBlocksPointersMetadata(blockId);
-            return new MetadataBlockPointersTraversable(block, blockId, metadataManager);
+            return new MetadataBlockPointersNode(block, blockId, metadataManager);
         }
     }
 

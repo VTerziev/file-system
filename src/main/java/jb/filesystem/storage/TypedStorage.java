@@ -1,5 +1,10 @@
 package jb.filesystem.storage;
 
+/**
+ * A storage, which works with some predetermined type. Requires all the instances of the type to be encoded with the
+ * same number of bytes.
+ * @param <T>
+ */
 public abstract class TypedStorage<T> {
 
     private final ByteStorage storage;

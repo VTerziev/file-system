@@ -31,7 +31,7 @@ public class FileSystemInitializer {
         FileSystemConfig.setStaticConfig(config);
 
         StorageSegmentor segmentor = new StorageSegmentor(storage);
-        DataBlockManagersProvider provider = new DataBlockManagersProvider(storage, segmentor);
+        DataBlockManagersProvider provider = new DataBlockManagersProvider(segmentor);
         DataBlocksManager dataBlockManager = provider.getDataBlockManager();
         MetadataBlocksManager metadataBlockManager = provider.getMetadataBlockManager();
         Traversor traversor = new Traversor();

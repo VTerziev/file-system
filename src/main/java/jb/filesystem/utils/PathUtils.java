@@ -17,4 +17,14 @@ public class PathUtils {
                 .collect(Collectors.toList());
     }
 
+    public String getDirectoryOf(String pathToFile) {
+        List<String> path = splitAbsolutePath(pathToFile);
+        path.remove(path.size()-1);
+        return path.stream().reduce(this::concatenatePaths).orElse("/");
+    }
+
+    public String getFileName(String pathToFile) {
+        List<String> path = splitAbsolutePath(pathToFile);
+        return path.get(path.size()-1);
+    }
 }

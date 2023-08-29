@@ -5,6 +5,9 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
+/**
+ * A metadata block, which contains only a list of pointers to other metadata blocks
+ */
 public class MetadataBlocksPointers implements MetadataBlock {
     private static final FileType FILE_TYPE = FileType.METADATA_BLOCKS_POINTERS;
     private final List<Integer> metadataBlocks;

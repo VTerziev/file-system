@@ -1,5 +1,8 @@
 package jb.filesystem.storage;
 
+/**
+ * An implementation of ByteStorage, which only keeps the data in-memory. Used mainly for tests.
+ */
 public class InMemoryStorage implements ByteStorage {
 
     private final int byteSize;

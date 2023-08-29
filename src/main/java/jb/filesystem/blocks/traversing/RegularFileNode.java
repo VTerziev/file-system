@@ -7,13 +7,13 @@ import jb.filesystem.blocks.metadata.MetadataBlocksPointers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegularFileTraversable implements Traversable {
+public class RegularFileNode implements TreeNode {
     private final FileMetadata fileMetadata;
     private final int id;
     private final MetadataBlocksManager metadataManager;
 
-    public RegularFileTraversable(FileMetadata fileMetadata, int id,
-                                  MetadataBlocksManager metadataManager) {
+    public RegularFileNode(FileMetadata fileMetadata, int id,
+                           MetadataBlocksManager metadataManager) {
         this.fileMetadata = fileMetadata;
         this.id = id;
         this.metadataManager = metadataManager;
@@ -67,13 +67,13 @@ public class RegularFileTraversable implements Traversable {
     }
 
     @Override
-    public List<Traversable> getNonLeaves() {
-        List<Traversable> result = new ArrayList<>();
+    public List<TreeNode> getNonLeaves() {
+        List<TreeNode> result = new ArrayList<>();
 
         for (int blockId : fileMetadata.getIndirectDataBlocks()) {
             MetadataBlocksPointers block = metadataManager.getMetadataBlocksPointersMetadata(blockId);
-            Traversable traversable = new MetadataBlockPointersTraversable(block, blockId, metadataManager);
-            result.add(traversable);
+            TreeNode currentNode = new MetadataBlockPointersNode(block, blockId, metadataManager);
+            result.add(currentNode);
         }
         return result;
     }
@@ -85,7 +85,7 @@ public class RegularFileTraversable implements Traversable {
         metadataManager.saveBlock(blockId, dataBlocksPointers);
 
         if (fileMetadata.areIndirectSlotsFull()) {
-            throw new IllegalStateException("Can't add more traversables");
+            throw new IllegalStateException("Can't add more non-leaves");
         }
         fileMetadata.appendIndirectBlock(blockId);
         metadataManager.saveBlock(id, fileMetadata);

@@ -10,7 +10,7 @@ public class DataBlockManagersProvider {
     private final MetadataBlocksManager metadataBlockManager;
     private final DataBlocksManager dataBlockManager;
 
-    public DataBlockManagersProvider(ByteStorage storage, StorageSegmentor segmentor) {
+    public DataBlockManagersProvider(StorageSegmentor segmentor) {
         this.dataBlockManager =
                 new StoredDataBlocksManager(segmentor.getDataBlocksBitmask(), segmentor.getDataBlocksStorage());
         this.metadataBlockManager =

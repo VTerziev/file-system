@@ -31,19 +31,19 @@ public class TraversorTest {
         int blockId = manager.allocateBlock();
         manager.saveBlock(blockId, metadata);
         // TODO: use mocks
-        Traversable traversable = new RegularFileTraversable(metadata, blockId, manager);
+        TreeNode node = new RegularFileNode(metadata, blockId, manager);
         Traversor traversor = new Traversor();
 
-        Assert.assertEquals(0, traversor.getTotalLeavesCount(traversable));
-        traversor.appendLeaf(traversable, 42);
-        Assert.assertEquals(List.of(42), readAllLeaves(traversor, traversable));
+        Assert.assertEquals(0, traversor.getTotalLeavesCount(node));
+        traversor.appendLeaf(node, 42);
+        Assert.assertEquals(List.of(42), readAllLeaves(traversor, node));
 
-        traversor.appendLeaf(traversable, 43);
-        Assert.assertEquals(List.of(42, 43), readAllLeaves(traversor, traversable));
+        traversor.appendLeaf(node, 43);
+        Assert.assertEquals(List.of(42, 43), readAllLeaves(traversor, node));
 
-        traversor.appendLeaf(traversable, 44);
-        traversor.appendLeaf(traversable, 45);
-        Assert.assertEquals(List.of(42, 43, 44, 45), readAllLeaves(traversor, traversable));
+        traversor.appendLeaf(node, 44);
+        traversor.appendLeaf(node, 45);
+        Assert.assertEquals(List.of(42, 43, 44, 45), readAllLeaves(traversor, node));
     }
 
     @Test
@@ -53,31 +53,31 @@ public class TraversorTest {
         int blockId = manager.allocateBlock();
         manager.saveBlock(blockId, metadata);
         // TODO: use mocks
-        Traversable traversable = new RegularFileTraversable(metadata, blockId, manager);
+        TreeNode node = new RegularFileNode(metadata, blockId, manager);
         Traversor traversor = new Traversor();
 
-        Assert.assertEquals(0, traversor.getTotalLeavesCount(traversable));
-        traversor.appendLeaf(traversable, 42);
-        Assert.assertEquals(List.of(42), readAllLeaves(traversor, traversable));
+        Assert.assertEquals(0, traversor.getTotalLeavesCount(node));
+        traversor.appendLeaf(node, 42);
+        Assert.assertEquals(List.of(42), readAllLeaves(traversor, node));
 
-        traversor.appendLeaf(traversable, 43);
-        Assert.assertEquals(List.of(42, 43), readAllLeaves(traversor, traversable));
+        traversor.appendLeaf(node, 43);
+        Assert.assertEquals(List.of(42, 43), readAllLeaves(traversor, node));
 
-        traversor.deleteLastLeaf(traversable);
-        Assert.assertEquals(List.of(42), readAllLeaves(traversor, traversable));
+        traversor.deleteLastLeaf(node);
+        Assert.assertEquals(List.of(42), readAllLeaves(traversor, node));
 
-        traversor.appendLeaf(traversable, 44);
-        Assert.assertEquals(List.of(42, 44), readAllLeaves(traversor, traversable));
+        traversor.appendLeaf(node, 44);
+        Assert.assertEquals(List.of(42, 44), readAllLeaves(traversor, node));
 
-        traversor.deleteLastLeaf(traversable);
-        traversor.deleteLastLeaf(traversable);
-        Assert.assertEquals(List.of(), readAllLeaves(traversor, traversable));
+        traversor.deleteLastLeaf(node);
+        traversor.deleteLastLeaf(node);
+        Assert.assertEquals(List.of(), readAllLeaves(traversor, node));
     }
 
-    private List<Integer> readAllLeaves(Traversor traversor, Traversable traversable) {
+    private List<Integer> readAllLeaves(Traversor traversor, TreeNode node) {
         List<Integer> result = new LinkedList<>();
-        for (int i = 0 ; i < traversor.getTotalLeavesCount(traversable) ; i ++ ) {
-            result.add(traversor.getLeaf(traversable, i));
+        for (int i = 0 ; i < traversor.getTotalLeavesCount(node) ; i ++ ) {
+            result.add(traversor.getLeaf(node, i));
         }
         return result;
     }

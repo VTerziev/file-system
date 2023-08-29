@@ -82,13 +82,13 @@ public class FileSystemConfig {
                 FILE_METADATA_FILE_SIZE_BYTES +
                 FILE_METADATA_MAX_INDIRECT_DATA_BLOCKS_COUNT*METADATA_BLOCK_POINTER_SIZE_BYTES
         ) {
-            throw new IllegalArgumentException("Incorrect number of bytes");
+            throw new IllegalStateException("Incorrect number of bytes");
         }
 
         // TODO: refactor this somehow
         if (METADATA_BLOCK_SIZE_BYTES != 1 + DIRECTORY_METADATA_NAME_SIZE +
                 METADATA_BLOCK_POINTER_SIZE_BYTES*DIRECTORY_METADATA_MAX_COUNT_CHILDREN) {
-            throw new IllegalArgumentException("Incorrect number of bytes");
+            throw new IllegalStateException("Incorrect number of bytes");
         }
     }
 

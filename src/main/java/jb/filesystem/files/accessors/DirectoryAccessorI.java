@@ -3,6 +3,9 @@ package jb.filesystem.files.accessors;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A class which is used to facilitate all modifications to directories and keep their data up to date.
+ */
 public interface DirectoryAccessorI {
     String getName(int directoryId);
     Optional<Integer> getFileId(int directoryId, String fileName);

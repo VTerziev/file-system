@@ -1,11 +1,25 @@
 package jb.filesystem.storage;
 
 public interface ByteStorage {
+
+    /**
+     * Read bytes from the storage
+     * @param offset - the offset from the beginning of the storage, where to start reading
+     * @param len - how many bytes to read
+     * @param buffer - where to store the result
+     * @return the number of bytes, which were successfully read
+     */
     // TODO: maybe don't return anything
-    // How many bytes were read
     int read(int offset, int len, byte[] buffer);
 
-    // How many bytes were written
+    /**
+     * Write bytes to the storage
+     * @param offset - the offset from the beginning of the storage, where to start writing
+     * @param len - how many bytes to write
+     * @param buffer - contains what should be written in the storage
+     * @return the number of bytes, which were successfully written
+     */
+    // TODO: maybe don't return anything
     int write(int offset, int len, byte[] buffer);
 
     int getSize();

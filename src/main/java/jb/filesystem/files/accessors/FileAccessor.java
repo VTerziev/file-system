@@ -4,8 +4,8 @@ import jb.filesystem.blocks.blockmanager.DataBlocksManager;
 import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
 import jb.filesystem.blocks.data.DataBlock;
 import jb.filesystem.blocks.metadata.FileMetadata;
-import jb.filesystem.blocks.traversing.RegularFileTraversable;
-import jb.filesystem.blocks.traversing.Traversable;
+import jb.filesystem.blocks.traversing.RegularFileNode;
+import jb.filesystem.blocks.traversing.TreeNode;
 import jb.filesystem.blocks.traversing.Traversor;
 import jb.filesystem.utils.SplitByBlocks;
 
@@ -93,8 +93,8 @@ public class FileAccessor implements FileAccessorI {
 
     private int getBlockId(int fileId, int blockOffset) {
         FileMetadata metadata = metadataManager.getFileMetadata(fileId);
-        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
-        return traversor.getLeaf(traversable, blockOffset);
+        TreeNode node = new RegularFileNode(metadata, fileId, metadataManager);
+        return traversor.getLeaf(node, blockOffset);
     }
 
     private void extendFile(int fileId, int requiredBytes) {
@@ -124,15 +124,15 @@ public class FileAccessor implements FileAccessorI {
 
     private int getAllocatedBlocksCount(int fileId) {
         FileMetadata metadata = metadataManager.getFileMetadata(fileId);
-        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
-        return traversor.getTotalLeavesCount(traversable);
+        TreeNode node = new RegularFileNode(metadata, fileId, metadataManager);
+        return traversor.getTotalLeavesCount(node);
     }
 
     private void deleteLastBlock(int fileId) {
         FileMetadata metadata = metadataManager.getFileMetadata(fileId);
-        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
-        int lastDataBlockId = traversor.getLeaf(traversable, getAllocatedBlocksCount(fileId)-1);
-        traversor.deleteLastLeaf(traversable);
+        TreeNode node = new RegularFileNode(metadata, fileId, metadataManager);
+        int lastDataBlockId = traversor.getLeaf(node, getAllocatedBlocksCount(fileId)-1);
+        traversor.deleteLastLeaf(node);
         dataBlocksManager.deallocateBlock(lastDataBlockId);
 
         metadata = metadataManager.getFileMetadata(fileId);
@@ -146,9 +146,9 @@ public class FileAccessor implements FileAccessorI {
 
     private void addADataBlockToAFile(int fileId) {
         FileMetadata metadata = metadataManager.getFileMetadata(fileId);
-        Traversable traversable = new RegularFileTraversable(metadata, fileId, metadataManager);
+        TreeNode node = new RegularFileNode(metadata, fileId, metadataManager);
         int blockId = dataBlocksManager.allocateBlock();
-        traversor.appendLeaf(traversable, blockId);
+        traversor.appendLeaf(node, blockId);
         metadataManager.saveBlock(fileId, metadata);
     }
 }

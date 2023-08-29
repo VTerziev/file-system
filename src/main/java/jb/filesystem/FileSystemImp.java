@@ -29,7 +29,8 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createFile(String pathToDir, String name) {
-        if (get(pathToDir, name).isPresent()) {
+        // TODO: throw a checked exception
+        if (get(pathUtils.concatenatePaths(pathToDir, name)).isPresent()) {
             throw new IllegalArgumentException("File with that name already exists");
         }
         int parentDirId = getDirectoryId(pathToDir);
@@ -40,7 +41,8 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createDirectory(String pathToParentDir, String name) {
-        if (get(pathToParentDir, name).isPresent()) {
+        // TODO: throw a checked exception
+        if (get(pathUtils.concatenatePaths(pathToParentDir, name)).isPresent()) {
             throw new IllegalArgumentException("File with that name already exists");
         }
         int parentDirId = getDirectoryId(pathToParentDir);
@@ -50,16 +52,21 @@ public class FileSystemImp implements FileSystemI {
     }
 
     @Override
-    public Optional<FileI> get(String pathToDir, String name) {
+    public Optional<FileI> get(String pathToFile) {
+        String pathToDir = pathUtils.getDirectoryOf(pathToFile);
+        String name = pathUtils.getFileName(pathToFile);
+
         int parentDirId = getDirectoryId(pathToDir);
         Optional<Integer> file = directoryAccessor.getFileId(parentDirId, name);
         return file.map(this::wrapFile);
     }
 
     @Override
-    public boolean delete(String pathToDir, String fileName) {
+    public boolean delete(String pathToFile) {
+        String pathToDir = pathUtils.getDirectoryOf(pathToFile);
+        String fileName = pathUtils.getFileName(pathToFile);
         int parentDirId = getDirectoryId(pathToDir);
-        return get(pathToDir, fileName).map(file -> {
+        return get(pathUtils.concatenatePaths(pathToDir, fileName)).map(file -> {
             if (file.isRegularFile()) {
                 return directoryAccessor.deleteRegularFile(parentDirId, fileName);
             } else {
@@ -72,14 +79,14 @@ public class FileSystemImp implements FileSystemI {
     private boolean deleteChildrenOf(String pathToDir) {
         List<FileI> children = listFiles(pathToDir);
         return children.stream()
-                .map(child -> delete(pathToDir, child.getName()))
+                .map(child -> delete(pathUtils.concatenatePaths(pathToDir, child.getName())))
                 .reduce((x,y) -> x&y)
                 .orElse(true);
     }
 
     @Override
     public boolean rename(String pathToDir, String oldName, String newName) {
-        Optional<FileI> f = get(pathToDir, oldName);
+        Optional<FileI> f = get(pathUtils.concatenatePaths(pathToDir, oldName));
         return f.map(file -> {
             file.rename(newName);
             return true;

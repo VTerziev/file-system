@@ -1,5 +1,8 @@
 package jb.filesystem.blocks.data;
 
+/**
+ * A block, which stores a chunk of the data of some file.
+ */
 public class DataBlock {
     private final byte[] bytes;
     public DataBlock(byte[] bytes) {

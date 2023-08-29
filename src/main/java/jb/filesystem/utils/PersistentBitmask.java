@@ -4,6 +4,9 @@ import jb.filesystem.storage.BitStorage;
 
 import java.util.BitSet;
 
+/**
+ * A class, which represents a bitmask and is persisted on some storage.
+ */
 public class PersistentBitmask {
     private final int totalBits;
     private final BitSet freeBits;

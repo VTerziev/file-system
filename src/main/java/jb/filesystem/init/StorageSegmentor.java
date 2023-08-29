@@ -5,6 +5,9 @@ import jb.filesystem.utils.PersistentBitmask;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
+/**
+ * Splits a given ByteStorage into different segments, to be used by a FileSystem.
+ */
 public class StorageSegmentor {
     private final PersistentBitmask dataBitmask;
     private final PersistentBitmask metadataBitmask;

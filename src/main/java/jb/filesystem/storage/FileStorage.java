@@ -3,6 +3,9 @@ package jb.filesystem.storage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ * An implementation of ByteStorage, which internally uses a file to store the data.
+ */
 public class FileStorage implements ByteStorage {
 
     private final RandomAccessFile inner;

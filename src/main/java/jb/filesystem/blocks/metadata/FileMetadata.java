@@ -5,6 +5,13 @@ import java.util.List;
 
 import static jb.filesystem.init.FileSystemConfig.CONFIG;
 
+/**
+ * A metadata block, used as an entry-point to all the information about a file.
+ * Contains the name of the file, current size and list of pointers to DataBlocks, where the file content is kept.
+ * This list is of fixed size and in some cases (for large files) it is not enough. For that situation, this class
+ * stores a list of pointers to other metadata blocks, which help locating the rest of the file. Those pointers are
+ * referred to as indirect data blocks.
+ */
 public class FileMetadata implements MetadataBlock {
     private static final FileType FILE_TYPE = FileType.REGULAR;
 
