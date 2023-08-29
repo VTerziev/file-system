@@ -15,13 +15,13 @@ public class FileStorage implements ByteStorage {
     }
 
     @Override
-    public int read(int offset, int len, byte[] buffer) {
-        int bytesRead = getSize() - offset;
+    public long read(long offset, long len, byte[] buffer) {
+        long bytesRead = getSize() - offset;
         if (bytesRead > len) { bytesRead = len; }
 
         try {
             inner.seek(offset);
-            inner.read(buffer, 0, bytesRead);
+            inner.read(buffer, 0, (int)bytesRead);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -29,13 +29,13 @@ public class FileStorage implements ByteStorage {
     }
 
     @Override
-    public int write(int offset, int len, byte[] buffer) {
-        int bytesToWrite = getSize() - offset;
+    public long write(long offset, long len, byte[] buffer) {
+        long bytesToWrite = getSize() - offset;
         if (bytesToWrite > len) { bytesToWrite = len; }
 
         try {
             inner.seek(offset);
-            inner.write(buffer, 0, bytesToWrite);
+            inner.write(buffer, 0, (int)bytesToWrite);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -43,7 +43,7 @@ public class FileStorage implements ByteStorage {
     }
 
     @Override
-    public int getSize() {
+    public long getSize() {
         try {
             return (int) inner.length();
         } catch (IOException e) {

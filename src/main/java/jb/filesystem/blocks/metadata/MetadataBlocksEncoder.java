@@ -2,7 +2,7 @@ package jb.filesystem.blocks.metadata;
 
 import java.util.List;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 /**
  * A helper class, which supports encoding a metadata block into a byte array.

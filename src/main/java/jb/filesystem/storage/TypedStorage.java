@@ -13,22 +13,22 @@ public abstract class TypedStorage<T> {
         this.storage = storage;
     }
 
-    public int read(int offset, int len, T[] buffer) {
-        for (int i = offset ; i < offset+len ; i ++) {
+    public long read(long offset, long len, T[] buffer) {
+        for (long i = offset ; i < offset+len ; i ++) {
             byte[] b = new byte[getByteSizeOfT()];
-            int x = storage.read(i*getByteSizeOfT(), getByteSizeOfT(), b);
+            long x = storage.read(i*getByteSizeOfT(), getByteSizeOfT(), b);
             if ( x != getByteSizeOfT() ) {
                 throw new IllegalStateException("Could not read the requested number of bytes");
             }
-            buffer[i-offset] = decodeT(b);
+            buffer[(int)(i-offset)] = decodeT(b);
         }
         return len;
     }
 
-    public int write(int offset, int len, T[] buffer) {
-        for (int i = offset ; i < offset+len ; i ++) {
-            byte[] b = encodeT(buffer[i-offset]);
-            int x = storage.write(i*getByteSizeOfT(), getByteSizeOfT(), b);
+    public long write(long offset, int len, T[] buffer) {
+        for (long i = offset ; i < offset+len ; i ++) {
+            byte[] b = encodeT(buffer[(int)(i-offset)]);
+            long x = storage.write(i*getByteSizeOfT(), getByteSizeOfT(), b);
             if ( x != getByteSizeOfT() ) {
                 throw new IllegalStateException("Could not write the requested number of bytes");
             }

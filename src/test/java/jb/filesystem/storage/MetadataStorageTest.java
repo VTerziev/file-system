@@ -4,7 +4,7 @@ import jb.filesystem.blocks.metadata.DirectoryMetadata;
 import jb.filesystem.blocks.metadata.FileMetadata;
 import jb.filesystem.blocks.metadata.FileType;
 import jb.filesystem.blocks.metadata.MetadataBlock;
-import jb.filesystem.init.FileSystemConfig;
+import jb.filesystem.config.FileSystemConfig;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

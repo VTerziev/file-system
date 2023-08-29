@@ -9,7 +9,7 @@ import jb.filesystem.blocks.traversing.TreeNode;
 import jb.filesystem.blocks.traversing.Traversor;
 import jb.filesystem.utils.SplitByBlocks;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class FileAccessor implements FileAccessorI {
 

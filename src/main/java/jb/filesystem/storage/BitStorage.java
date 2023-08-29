@@ -7,27 +7,27 @@ public class BitStorage {
         this.storage = storage;
     }
 
-    public boolean writeBit(int index, boolean value) {
+    public boolean writeBit(long index, boolean value) {
         byte[] bytes = new byte[1];
-        int x = storage.read(index/8, 1, bytes);
+        long x = storage.read(index/8, 1, bytes);
         if (x != 1 ) {
             throw new IllegalStateException("Couldn't read bit");
         }
-        bytes[0] = setBitTo(bytes[0], index%8, value);
+        bytes[0] = setBitTo(bytes[0], (int)index%8, value);
         x = storage.write(index/8, 1, bytes);
         return x > 0;
     }
 
-    public boolean readBit(int index) {
+    public boolean readBit(long index) {
         byte[] bytes = new byte[1];
-        int x = storage.read(index/8, 1, bytes);
+        long x = storage.read(index/8, 1, bytes);
         if (x != 1 ) {
             throw new IllegalStateException("Couldn't read bit");
         }
-        return hasBitActive(bytes[0], index%8);
+        return hasBitActive(bytes[0], (int)index%8);
     }
 
-    public int getSize() {
+    public long getSize() {
         return storage.getSize()*8;
     }
 

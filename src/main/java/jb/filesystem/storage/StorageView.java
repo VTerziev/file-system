@@ -7,10 +7,10 @@ package jb.filesystem.storage;
 public class StorageView implements ByteStorage {
 
     private final ByteStorage inner;
-    private final int offset;
-    private final int len;
+    private final long offset;
+    private final long len;
 
-    public StorageView(ByteStorage inner, int offset, int len) {
+    public StorageView(ByteStorage inner, long offset, long len) {
         this.inner = inner;
         this.offset = offset;
         this.len = len;
@@ -20,21 +20,21 @@ public class StorageView implements ByteStorage {
     }
 
     @Override
-    public int read(int offset, int len, byte[] buffer) {
-        int newOffset = offset + this.offset;
-        int newLen = Math.min(len, this.len + this.offset - newOffset);
+    public long read(long offset, long len, byte[] buffer) {
+        long newOffset = offset + this.offset;
+        long newLen = Math.min(len, this.len + this.offset - newOffset);
         return inner.read(newOffset, newLen, buffer);
     }
 
     @Override
-    public int write(int offset, int len, byte[] buffer) {
-        int newOffset = offset + this.offset;
-        int newLen = Math.min(len, this.len + this.offset - newOffset);
+    public long write(long offset, long len, byte[] buffer) {
+        long newOffset = offset + this.offset;
+        long newLen = Math.min(len, this.len + this.offset - newOffset);
         return inner.write(newOffset, newLen, buffer);
     }
 
     @Override
-    public int getSize() {
+    public long getSize() {
         return len;
     }
 }

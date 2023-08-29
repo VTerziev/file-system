@@ -3,7 +3,7 @@ package jb.filesystem.blocks.traversing;
 import jb.filesystem.blocks.blockmanager.MetadataBlocksManager;
 import jb.filesystem.blocks.blockmanager.StoredMetadataManager;
 import jb.filesystem.blocks.metadata.FileMetadata;
-import jb.filesystem.init.FileSystemConfig;
+import jb.filesystem.config.FileSystemConfig;
 import jb.filesystem.storage.BitStorage;
 import jb.filesystem.storage.InMemoryStorage;
 import jb.filesystem.storage.MetadataStorage;

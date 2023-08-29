@@ -1,6 +1,6 @@
 package jb.filesystem.blocks.metadata;
 
-import jb.filesystem.init.FileSystemConfig;
+import jb.filesystem.config.FileSystemConfig;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

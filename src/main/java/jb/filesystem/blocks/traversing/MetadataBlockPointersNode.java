@@ -8,7 +8,7 @@ import jb.filesystem.blocks.metadata.MetadataBlocksPointers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class MetadataBlockPointersNode implements TreeNode {
     private final MetadataBlocksPointers pointers;

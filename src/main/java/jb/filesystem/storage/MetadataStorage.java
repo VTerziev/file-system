@@ -3,7 +3,7 @@ package jb.filesystem.storage;
 import jb.filesystem.blocks.metadata.MetadataBlock;
 import jb.filesystem.blocks.metadata.MetadataBlocksFactory;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class MetadataStorage extends TypedStorage<MetadataBlock> {
     private final MetadataBlocksFactory factory;

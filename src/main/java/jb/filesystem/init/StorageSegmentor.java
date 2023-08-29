@@ -3,7 +3,7 @@ package jb.filesystem.init;
 import jb.filesystem.storage.*;
 import jb.filesystem.utils.PersistentBitmask;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 /**
  * Splits a given ByteStorage into different segments, to be used by a FileSystem.
@@ -46,19 +46,19 @@ public class StorageSegmentor {
         return metadataStorage;
     }
 
-    private int getMetadataBitmaskSegmentStart() {
+    private long getMetadataBitmaskSegmentStart() {
         return CONFIG.INITIAL_OFFSET;
     }
 
-    private int getDataBitmaskSegmentStart() {
+    private long getDataBitmaskSegmentStart() {
         return getMetadataBitmaskSegmentStart()+CONFIG.METADATA_BITMASK_SIZE;
     }
 
-    private int getMetadataSegmentStart() {
+    private long getMetadataSegmentStart() {
         return getDataBitmaskSegmentStart() + CONFIG.DATA_BITMASK_SIZE;
     }
 
-    private int getDataSegmentStart() {
+    private long getDataSegmentStart() {
         return getMetadataSegmentStart() + CONFIG.METADATA_SEGMENT_SIZE;
     }
 }

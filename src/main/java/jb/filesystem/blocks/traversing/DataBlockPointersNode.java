@@ -6,7 +6,7 @@ import jb.filesystem.blocks.metadata.DataBlocksPointers;
 import java.util.Collections;
 import java.util.List;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class DataBlockPointersNode implements TreeNode {
 

@@ -2,7 +2,7 @@ package jb.filesystem.storage;
 
 import jb.filesystem.blocks.data.DataBlock;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class DataBlocksStorage extends TypedStorage<DataBlock> {
 

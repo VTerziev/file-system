@@ -3,7 +3,7 @@ package jb.filesystem.blocks.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 /**
  * A metadata block, containing all the information about a given directory. Contains a directory name and a list of

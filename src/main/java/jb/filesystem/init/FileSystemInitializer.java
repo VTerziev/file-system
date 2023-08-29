@@ -1,5 +1,6 @@
 package jb.filesystem.init;
 
+import jb.filesystem.config.FileSystemConfig;
 import jb.filesystem.files.FileFactory;
 import jb.filesystem.FileSystemI;
 import jb.filesystem.FileSystemImp;
@@ -17,7 +18,7 @@ import jb.filesystem.files.synchronization.SynchronizedFileAccessor;
 import jb.filesystem.blocks.traversing.Traversor;
 import jb.filesystem.utils.PathUtils;
 
-import static jb.filesystem.init.FileSystemConfig.CONFIG;
+import static jb.filesystem.config.FileSystemConfig.CONFIG;
 
 public class FileSystemInitializer {
     private final FileAccessorI fileAccessor;

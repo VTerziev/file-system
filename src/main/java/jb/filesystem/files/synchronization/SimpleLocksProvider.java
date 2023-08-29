@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SimpleLocksProvider implements FileLocksProvider {
     private final List<Lock> locks;
 
-    public SimpleLocksProvider(int maxFileCount) {
+    public SimpleLocksProvider(long maxFileCount) {
         locks = new ArrayList<>();
         for (int i = 0 ; i < maxFileCount; i ++ ) {
             locks.add(new ReentrantLock());

@@ -10,7 +10,7 @@ public interface ByteStorage {
      * @return the number of bytes, which were successfully read
      */
     // TODO: maybe don't return anything
-    int read(int offset, int len, byte[] buffer);
+    long read(long offset, long len, byte[] buffer);
 
     /**
      * Write bytes to the storage
@@ -20,7 +20,7 @@ public interface ByteStorage {
      * @return the number of bytes, which were successfully written
      */
     // TODO: maybe don't return anything
-    int write(int offset, int len, byte[] buffer);
+    long write(long offset, long len, byte[] buffer);
 
-    int getSize();
+    long getSize();
 }
