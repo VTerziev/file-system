@@ -5,6 +5,7 @@ import jb.filesystem.blocks.metadata.DirectoryMetadata;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DirectoryAccessor implements DirectoryAccessorI {
     private final MetadataBlocksManager metadataManager;
@@ -16,6 +17,7 @@ public class DirectoryAccessor implements DirectoryAccessorI {
     }
 
     public void addFile(int directoryId, int fileId) {
+        // TODO: check if a file with that name exists already
         DirectoryMetadata metadata = metadataManager.getDirectoryMetadata(directoryId);
         metadata.addChild(fileId);
         metadataManager.saveBlock(directoryId, metadata);

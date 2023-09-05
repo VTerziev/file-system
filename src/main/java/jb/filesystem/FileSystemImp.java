@@ -29,10 +29,6 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createFile(String pathToDir, String name) {
-        // TODO: throw a checked exception
-        if (get(pathUtils.concatenatePaths(pathToDir, name)).isPresent()) {
-            throw new IllegalArgumentException("File with that name already exists");
-        }
         int parentDirId = getDirectoryId(pathToDir);
         int blockId = fileAccessor.createFile(name);
         // TODO: if a file with that name is created in the meantime, the blockId block should be released.
@@ -43,13 +39,9 @@ public class FileSystemImp implements FileSystemI {
 
     @Override
     public FileI createDirectory(String pathToParentDir, String name) {
-        // TODO: throw a checked exception
-        if (get(pathUtils.concatenatePaths(pathToParentDir, name)).isPresent()) {
-            throw new IllegalArgumentException("File with that name already exists");
-        }
         int parentDirId = getDirectoryId(pathToParentDir);
         int newDirId = directoryAccessor.createDirectory(name);
-        // TODO: if a file with that name is created in the meantime, the newDirId block should be released.
+        // TODO: if a file with that name already exists, the newDirId block should be released.
         // this will be fixed, when addFile throws a checked exception.
         directoryAccessor.addFile(parentDirId, newDirId);
         return wrapFile(newDirId);

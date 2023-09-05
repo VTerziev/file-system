@@ -39,7 +39,7 @@ public class BitStorageTest {
         return result;
     }
     private boolean[] readWholeStorage(BitStorage storage) {
-        boolean[] result = new boolean[storage.getSize()];
+        boolean[] result = new boolean[(int)storage.getSize()];
         for (int i = 0 ; i < storage.getSize() ; i ++ ) {
             result[i] = storage.readBit(i);
         }
