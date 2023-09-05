@@ -35,6 +35,8 @@ public class FileSystemImp implements FileSystemI {
         }
         int parentDirId = getDirectoryId(pathToDir);
         int blockId = fileAccessor.createFile(name);
+        // TODO: if a file with that name is created in the meantime, the blockId block should be released.
+        // this will be fixed, when addFile throws a checked exception.
         directoryAccessor.addFile(parentDirId, blockId);
         return wrapFile(blockId);
     }
@@ -47,6 +49,8 @@ public class FileSystemImp implements FileSystemI {
         }
         int parentDirId = getDirectoryId(pathToParentDir);
         int newDirId = directoryAccessor.createDirectory(name);
+        // TODO: if a file with that name is created in the meantime, the newDirId block should be released.
+        // this will be fixed, when addFile throws a checked exception.
         directoryAccessor.addFile(parentDirId, newDirId);
         return wrapFile(newDirId);
     }
