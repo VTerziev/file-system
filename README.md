@@ -1,12 +1,12 @@
 # file-system
 # Architectural overview:
-    The most important unit in this File System is a block. Every block represents a chunk of the stored information
+ The most important unit in this File System is a block. Every block represents a chunk of the stored information
 about a file. There are 2 types of blocks: data and metadata blocks. The data blocks contain the content of the file
 itself, while the metadata blocks contain, as the name suggests, metadata. The latter could store information like name
 of the file, modification timestamps, access rights, etc. It also stores the location of the data blocks, belonging to
 the file.
 
-    There are a fixed number of existing data blocks and metadata blocks in a File System. That limits the maximal
+ There are a fixed number of existing data blocks and metadata blocks in a File System. That limits the maximal
 number of files that can be stored. The File System splits the existing storage in 5 segments:
 - One for storing general information about the FileSystem. (Could contain checksums and other such properties.
   Currently only stores the root folder id).
